@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 Microsoft (R) Macro Assembler Version 5.10                  9/30/21 02:26:47
+=======
+Microsoft (R) Macro Assembler Version 5.10                  9/30/21 00:53:14
+>>>>>>> master
                                                              Page     1-1
 
 
@@ -52,6 +56,7 @@
 				; Косвенная адресация
  001E  8A 07			mov al,[bx]
 				mov mem3,[bx]
+<<<<<<< HEAD
 lb2_comp.asm(41): error A2052: Improper operand type
 				; Базированная адресация
 				7
@@ -59,6 +64,15 @@ lb2_comp.asm(43): warning A4001: Extra characters on line
  0020  8A 47 03			mov al,[bx]+3
  0023  8B 4F 03			mov cx,3[bx]
 Microsoft (R) Macro Assembler Version 5.10                  9/30/21 02:26:47
+=======
+lb2_comp_fix.asm(41): error A2052: Improper operand type
+				; Базированная адресация
+				7
+lb2_comp_fix.asm(43): warning A4001: Extra characters on line
+ 0020  8A 47 03			mov al,[bx]+3
+ 0023  8B 4F 03			mov cx,3[bx]
+Microsoft (R) Macro Assembler Version 5.10                  9/30/21 00:53:14
+>>>>>>> master
                                                              Page     1-2
 
 
@@ -66,15 +80,25 @@ lb2_comp.asm(43): warning A4001: Extra characters on line
  0026  BF 0002			mov di,ind
  0029  8A 85 000E R		mov al,vec2[di]
  002D  8B 8D 000E R		mov cx,vec2[di]
+<<<<<<< HEAD
 lb2_comp.asm(49): warning A4031: Operand types must match
+=======
+lb2_comp_fix.asm(49): warning A4031: Operand types must match
+>>>>>>> master
 				; Адресация с базирование�
 				� и индексированием
  0031  BB 0003			mov bx,3
  0034  8A 81 0016 R		mov al,matr[bx][di]
  0038  8B 89 0016 R		mov cx,matr[bx][di]
+<<<<<<< HEAD
 lb2_comp.asm(53): warning A4031: Operand types must match
  003C  8B 85 0022 R		mov ax,matr[bx*4][di]
 lb2_comp.asm(54): error A2055: Illegal register value
+=======
+lb2_comp_fix.asm(53): warning A4031: Operand types must match
+ 003C  8B 85 0022 R		mov ax,matr[bx*4][di]
+lb2_comp_fix.asm(54): error A2055: Illegal register value
+>>>>>>> master
 				; ПРОВЕРКА РЕЖИМОВ АДРЕСА�
 				�ИИ С УЧЕТОМ СЕГМЕНТОВ
 				; Переопределение сегмент
@@ -96,9 +120,15 @@ lb2_comp.asm(54): error A2055: Illegal register value
 				; ------ вариант 4
  005A  8B EC			mov bp,sp
  005C  3E: 8B 86 0016 R		mov ax,matr[bp+bx]
+<<<<<<< HEAD
 lb2_comp.asm(73): error A2046: Multiple base registers
  0061  3E: 8B 83 0016 R		mov ax,matr[bp+di+si]
 lb2_comp.asm(74): error A2047: Multiple index registers
+=======
+lb2_comp_fix.asm(73): error A2046: Multiple base registers
+ 0061  3E: 8B 83 0016 R		mov ax,matr[bp+di+si]
+lb2_comp_fix.asm(74): error A2047: Multiple index registers
+>>>>>>> master
 				; Использование сегмента �
 				�тека
  0066  FF 36 0000 R		push mem1
@@ -107,10 +137,17 @@ lb2_comp.asm(74): error A2047: Multiple index registers
  0070  8B 56 02			mov dx,[bp]+2
  0073  CA 0002			ret 2
  0076				Main ENDP
+<<<<<<< HEAD
 lb2_comp.asm(81): error A2006: Phase error between passes
  0076				CODE ENDS
 				END Main
 Microsoft (R) Macro Assembler Version 5.10                  9/30/21 02:26:47
+=======
+lb2_comp_fix.asm(81): error A2006: Phase error between passes
+ 0076				CODE ENDS
+				END Main
+Microsoft (R) Macro Assembler Version 5.10                  9/30/21 00:53:14
+>>>>>>> master
                                                              Symbols-1
 
 
@@ -143,7 +180,11 @@ VEC1 . . . . . . . . . . . . . .  	L BYTE	0006	DATA
 VEC2 . . . . . . . . . . . . . .  	L BYTE	000E	DATA
 
 @CPU . . . . . . . . . . . . . .  	TEXT  0101h		
+<<<<<<< HEAD
 @FILENAME  . . . . . . . . . . .  	TEXT  lb2_comp		
+=======
+@FILENAME  . . . . . . . . . . .  	TEXT  lb2_comp_fix		
+>>>>>>> master
 @VERSION . . . . . . . . . . . .  	TEXT  510		
 
 
@@ -151,7 +192,11 @@ VEC2 . . . . . . . . . . . . . .  	L BYTE	000E	DATA
      83 Total   Lines
      19 Symbols
 
+<<<<<<< HEAD
   47800 + 459460 Bytes symbol space free
+=======
+  47772 + 459488 Bytes symbol space free
+>>>>>>> master
 
       3 Warning Errors
       5 Severe  Errors
