@@ -11,6 +11,7 @@ i      DW    5
 k      DW    -10
 i1     DW    0
 i2     DW    0
+tmp	   DW    0
 
 DATA      ENDS
 
@@ -33,6 +34,7 @@ Main      PROC  FAR
 	  shl cx, 1
 	  shl cx, 1
 	  mov bx, b    ;
+	  mov tmp cx
 	  cmp a, bx    ; сравнение a и b
 	  jle f2second
 		add cx, 3
@@ -46,11 +48,7 @@ Main      PROC  FAR
 	  mov i1, cx
 	  
 	  ;вычисление f3
-	  mov cx, i
-	  mov ax, cx
-	  shl cx, 1
-	  shl cx, 1
-	  cmp a, bx
+	  mov cx, tmp
 	  jle f3second
 	    mov ax, cx
 		mov cx, 7
@@ -64,13 +62,6 @@ Main      PROC  FAR
 		sub cx, ax
 	  f3final:
 	  mov i2, cx
-	  
-	  mov cx, i1
-	  cmp cx, 0
-	  jge skip1     ;модуль i1
-	    neg cx
-		mov i1, cx
-	  skip1:
 	  
 	  mov cx, i2
 	  cmp cx, 0
@@ -93,6 +84,12 @@ Main      PROC  FAR
 		  mov cx, 4        ; |i1| < 4
 		  jmp MainFinal
 	  f8Second:
+	  mov cx, i1
+	  cmp cx, 0
+	  jge skip1     ;модуль i1
+	    neg cx
+		mov i1, cx
+	  skip1:
 	    mov cx, i1
 		sub cx, i2
 	  MainFinal:           ; в cx лежит значение функции f8
