@@ -23,7 +23,7 @@ ASSUME CS:CODE, DS:DATA, SS:AStack
 
 ;--------Головная процедура--------
 Main PROC FAR
-		push ds
+	push ds
 	sub ax, ax
 	push ax
 	mov ax, DATA
@@ -39,11 +39,11 @@ case1:
 	shl ax, 1	; ax = 4i
 	neg ax		; ax = -4i
 	sub ax, 3	; ax = f2(i) = -4i - 3 
-	mov i1, ax	: i1 = -4i-3
+	mov i1, ax	; i1 = -4i-3
 	; Вычисление f7
 	add ax, 8	; ax = f7(i) = -4i + 5
 	mov i2, ax	; i2 = -4i + 5
-	jmp f4
+	jmp f4_
 case2:
 	; Вычисление f7
 	mov bx, ax	; bx = i
@@ -52,11 +52,13 @@ case2:
 	mov bx, 10
 	sub bx, ax	; bx = 10 - 3i
 	mov i2, bx
+	; Вычисление f2
 	shl bx, 1	; bx = 20 - 6i
 	neg bx		; bx = 6i - 20
 	add bx, 10	; bx = 6i - 10 
 	mov i1, bx
-f4:
+
+f4_:
 	mov bx, k
 	cmp bx, 0
 	jge f4_case2 	; Если k >= 0, перейти к f3_case2
