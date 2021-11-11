@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler Version 5.10                  11/11/21 13:09:5
+Microsoft (R) Macro Assembler Version 5.10                  11/11/21 14:56:5
                                                              Page     1-1
 
 
@@ -16,7 +16,7 @@
  0000  0006			a      DW    6
  0002  0004			b      DW    4
  0004  0003			i      DW    3
- 0006  0002			k      DW    2
+ 0006  FFFE			k      DW    -2
  0008  0000			i1     DW    0
  000A  0000			i2     DW    0
  000C  0000			T      DW    0
@@ -39,48 +39,44 @@
  000C  8B 0E 0004 R		      mov cx, i
  0010  8B C1			      mov ax, cx
  0012  D1 E1			      shl cx, 1
- 0014  D1 E1			      shl cx, 1 ; cx = 4i
+ 0014  D1 E1			      shl cx, 1 ; C = 4i
  0016  89 0E 000C R			  mov T, cx ; T = 4i
  001A  01 06 000C R			  add T, ax
  001E  01 06 000C R		      add T, ax ; T = 6i
  0022  8B 1E 0002 R			  mov bx, b
  0026  39 1E 0000 R		      cmp a, bx
 					  
-					  ;вычисление f8
- 002A  7E 10			      jle f8second
- 002C  83 06 000C R 08		        add T, 8
- 0031  F7 1E 000C R		        neg T
- 0035  8B 0E 000C R				mov cx, T
- 0039  EB 15 90			        jmp f8final
- 003C				      f8second:
- 003C  8B 0E 0004 R			    mov cx, i
- 0040  83 C1 FF			        add cx, -1
- 0043  8B C1			        mov ax, cx
-Microsoft (R) Macro Assembler Version 5.10                  11/11/21 13:09:5
+					  ; a>b
+ 002A  7E 1C				  jle f83less
+ 002C  8B C1					mov ax, cx
+ 002E  B9 0007			        mov cx, 7
+ 0031  2B C8			        sub cx, ax
+ 0033  89 0E 0008 R		        mov i1, cx
+ 0037  83 06 000C R 08				add T, 8
+ 003C  F7 1E 000C R		        neg T
+ 0040  8B 0E 000C R				mov cx, T
+ 0044  89 0E 000A R		        mov i2, cx
+Microsoft (R) Macro Assembler Version 5.10                  11/11/21 14:56:5
                                                              Page     1-2
 
 
- 0045  D1 E1			        shl cx, 1
- 0047  D1 E1			        shl cx, 1
- 0049  2B C8			        sub cx, ax
- 004B  F7 D9			        neg cx
- 004D  83 C1 09			        add cx, 9
- 0050				      f8final:
- 0050  89 0E 000A R		      mov i2, cx
+						
+					  ; a<b
+ 0048					  f83less: 	  
+ 0048  A1 000C R		        mov ax, T
+ 004B  B9 0008			        mov cx, 8
+ 004E  2B C8			        sub cx, ax
+ 0050  89 0E 0008 R				mov i1, cx
+ 0054  8B 0E 0004 R				mov cx, i
+ 0058  83 C1 FF			        add cx, -1
+ 005B  8B C1			        mov ax, cx
+ 005D  D1 E1			        shl cx, 1
+ 005F  D1 E1			        shl cx, 1
+ 0061  2B C8			        sub cx, ax
+ 0063  F7 D9			        neg cx
+ 0065  83 C1 09			        add cx, 9
+ 0068  89 0E 000A R		        mov i2, cx
 					  
-					  ;вычисление f3
- 0054  7E 0A			      jle f3second
- 0056  8B C1			        mov ax, cx
- 0058  B9 0007			        mov cx, 7
- 005B  2B C8			        sub cx, ax
- 005D  EB 09 90			        jmp f3final
- 0060				      f3second:       
- 0060  A1 000C R		        mov ax, T
- 0063  B9 0008			        mov cx, 8
- 0066  2B C8			        sub cx, ax
- 0068				      f3final:
- 0068  89 0E 0008 R		      mov i1, cx
-				      
 				      ;рассчет f6
  006C  8B 1E 0006 R		      mov bx, k
  0070  83 FB 00			      cmp bx, 0
@@ -111,7 +107,7 @@
  00A7				Main      ENDP
  00A7				CODE      ENDS
 				END Main
-Microsoft (R) Macro Assembler Version 5.10                  11/11/21 13:09:5
+Microsoft (R) Macro Assembler Version 5.10                  11/11/21 14:56:5
                                                              Symbols-1
 
 
@@ -131,11 +127,8 @@ A  . . . . . . . . . . . . . . .  	L WORD	0000	DATA
 
 B  . . . . . . . . . . . . . . .  	L WORD	0002	DATA
 
-F3FINAL  . . . . . . . . . . . .  	L NEAR	0068	CODE
-F3SECOND . . . . . . . . . . . .  	L NEAR	0060	CODE
 F6SECOND . . . . . . . . . . . .  	L NEAR	0094	CODE
-F8FINAL  . . . . . . . . . . . .  	L NEAR	0050	CODE
-F8SECOND . . . . . . . . . . . .  	L NEAR	003C	CODE
+F83LESS  . . . . . . . . . . . .  	L NEAR	0048	CODE
 
 I  . . . . . . . . . . . . . . .  	L WORD	0004	DATA
 I1 . . . . . . . . . . . . . . .  	L WORD	0008	DATA
@@ -152,15 +145,15 @@ SKIP2  . . . . . . . . . . . . .  	L NEAR	0087	CODE
 T  . . . . . . . . . . . . . . .  	L WORD	000C	DATA
 
 @CPU . . . . . . . . . . . . . .  	TEXT  0101h		
-@FILENAME  . . . . . . . . . . .  	TEXT  lb3		
+@FILENAME  . . . . . . . . . . .  	TEXT  proba		
 @VERSION . . . . . . . . . . . .  	TEXT  510		
 
 
-    101 Source  Lines
-    101 Total   Lines
-     24 Symbols
+     97 Source  Lines
+     97 Total   Lines
+     21 Symbols
 
-  47992 + 459268 Bytes symbol space free
+  47976 + 461331 Bytes symbol space free
 
       0 Warning Errors
       0 Severe  Errors

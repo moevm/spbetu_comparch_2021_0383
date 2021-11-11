@@ -8,7 +8,7 @@ DATA      SEGMENT
 a      DW    6
 b      DW    4
 i      DW    3
-k      DW    2
+k      DW    -2
 i1     DW    0
 i2     DW    0
 T      DW    0
@@ -31,21 +31,31 @@ Main      PROC  FAR
       mov cx, i
       mov ax, cx
       shl cx, 1
-      shl cx, 1 ; cx = 4i
+      shl cx, 1 ; C = 4i
 	  mov T, cx ; T = 4i
 	  add T, ax
       add T, ax ; T = 6i
 	  mov bx, b
       cmp a, bx
 	  
-	  ;вычисление f8
-      jle f8second
-        add T, 8
+	  ; a>b
+	  jle f83less
+		mov ax, cx
+        mov cx, 7
+        sub cx, ax
+        mov i1, cx
+		add T, 8
         neg T
 		mov cx, T
-        jmp f8final
-      f8second:
-	    mov cx, i
+        mov i2, cx
+		
+	  ; a<b
+	  f83less: 	  
+        mov ax, T
+        mov cx, 8
+        sub cx, ax
+		mov i1, cx
+		mov cx, i
         add cx, -1
         mov ax, cx
         shl cx, 1
@@ -53,22 +63,8 @@ Main      PROC  FAR
         sub cx, ax
         neg cx
         add cx, 9
-      f8final:
-      mov i2, cx
+        mov i2, cx
 	  
-	  ;вычисление f3
-      jle f3second
-        mov ax, cx
-        mov cx, 7
-        sub cx, ax
-        jmp f3final
-      f3second:       
-        mov ax, T
-        mov cx, 8
-        sub cx, ax
-      f3final:
-      mov i1, cx
-      
       ;рассчет f6
       mov bx, k
       cmp bx, 0
