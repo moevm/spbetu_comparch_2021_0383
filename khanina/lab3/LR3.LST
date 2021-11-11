@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler Version 5.10                  11/11/21 14:56:5
+Microsoft (R) Macro Assembler Version 5.10                  11/11/21 20:46:3
                                                              Page     1-1
 
 
@@ -47,7 +47,7 @@
  0026  39 1E 0000 R		      cmp a, bx
 					  
 					  ; a>b
- 002A  7E 1C				  jle f83less
+ 002A  7E 1F				  jle f83less
  002C  8B C1					mov ax, cx
  002E  B9 0007			        mov cx, 7
  0031  2B C8			        sub cx, ax
@@ -56,58 +56,60 @@
  003C  F7 1E 000C R		        neg T
  0040  8B 0E 000C R				mov cx, T
  0044  89 0E 000A R		        mov i2, cx
-Microsoft (R) Macro Assembler Version 5.10                  11/11/21 14:56:5
+Microsoft (R) Macro Assembler Version 5.10                  11/11/21 20:46:3
                                                              Page     1-2
 
 
+ 0048  EB 25 90					jmp final
 						
 					  ; a<b
- 0048					  f83less: 	  
- 0048  A1 000C R		        mov ax, T
- 004B  B9 0008			        mov cx, 8
- 004E  2B C8			        sub cx, ax
- 0050  89 0E 0008 R				mov i1, cx
- 0054  8B 0E 0004 R				mov cx, i
- 0058  83 C1 FF			        add cx, -1
- 005B  8B C1			        mov ax, cx
- 005D  D1 E1			        shl cx, 1
- 005F  D1 E1			        shl cx, 1
- 0061  2B C8			        sub cx, ax
- 0063  F7 D9			        neg cx
- 0065  83 C1 09			        add cx, 9
- 0068  89 0E 000A R		        mov i2, cx
+ 004B					  f83less: 	  
+ 004B  A1 000C R		        mov ax, T
+ 004E  B9 0008			        mov cx, 8
+ 0051  2B C8			        sub cx, ax
+ 0053  89 0E 0008 R				mov i1, cx
+ 0057  8B 0E 0004 R				mov cx, i
+ 005B  83 C1 FF			        add cx, -1
+ 005E  8B C1			        mov ax, cx
+ 0060  D1 E1			        shl cx, 1
+ 0062  D1 E1			        shl cx, 1
+ 0064  2B C8			        sub cx, ax
+ 0066  F7 D9			        neg cx
+ 0068  83 C1 09			        add cx, 9
+ 006B  89 0E 000A R		        mov i2, cx
 					  
 				      ;рассчет f6
- 006C  8B 1E 0006 R		      mov bx, k
- 0070  83 FB 00			      cmp bx, 0
- 0073  7C 1F			      jl f6Second
- 0075  8B D8			        mov bx, ax
- 0077  83 FB 07			        cmp bx, 7
- 007A  8B 0E 000A R				mov cx, i2
- 007E  83 F9 00			        cmp cx, 0
- 0081  7D 04			        jge skip2     
- 0083  F7 D9			          neg cx
- 0085  8B C1			          mov ax, cx
- 0087				        skip2:
- 0087  7C 05			        jl max1
- 0089  8B CB			          mov cx, bx       ; |i2| >= 7
- 008B  EB 19 90			          jmp MainFinal
- 008E				        max1:
- 008E  B9 0007			          mov cx, 7        ; |i2| < 7
- 0091  EB 13 90			          jmp MainFinal
- 0094				        f6Second:
- 0094  8B 0E 0008 R		        mov cx, i1
- 0098  2B 0E 000A R		        sub cx, i2
- 009C  83 F9 00			        cmp cx, 0
- 009F  7D 05			        jge MainFinal
- 00A1  F7 D9			            neg cx
- 00A3  EB 01 90			            jmp MainFinal
- 00A6				      MainFinal:          
- 00A6  CB			      ret
- 00A7				Main      ENDP
- 00A7				CODE      ENDS
+ 006F					  final:
+ 006F  8B 1E 0006 R		      mov bx, k
+ 0073  83 FB 00			      cmp bx, 0
+ 0076  7C 1F			      jl f6Second
+ 0078  8B D8			        mov bx, ax
+ 007A  83 FB 07			        cmp bx, 7
+ 007D  8B 0E 000A R				mov cx, i2
+ 0081  83 F9 00			        cmp cx, 0
+ 0084  7D 04			        jge skip2     
+ 0086  F7 D9			          neg cx
+ 0088  8B C1			          mov ax, cx
+ 008A				        skip2:
+ 008A  7C 05			        jl max1
+ 008C  8B CB			          mov cx, bx       ; |i2| >= 7
+ 008E  EB 19 90			          jmp MainFinal
+ 0091				        max1:
+ 0091  B9 0007			          mov cx, 7        ; |i2| < 7
+ 0094  EB 13 90			          jmp MainFinal
+ 0097				        f6Second:
+ 0097  8B 0E 0008 R		        mov cx, i1
+ 009B  2B 0E 000A R		        sub cx, i2
+ 009F  83 F9 00			        cmp cx, 0
+ 00A2  7D 05			        jge MainFinal
+ 00A4  F7 D9			            neg cx
+ 00A6  EB 01 90			            jmp MainFinal
+ 00A9				      MainFinal:          
+ 00A9  CB			      ret
+ 00AA				Main      ENDP
+ 00AA				CODE      ENDS
 				END Main
-Microsoft (R) Macro Assembler Version 5.10                  11/11/21 14:56:5
+Microsoft (R) Macro Assembler Version 5.10                  11/11/21 20:46:3
                                                              Symbols-1
 
 
@@ -116,7 +118,7 @@ Segments and Groups:
                 N a m e         	Length	 Align	Combine Class
 
 ASTACK . . . . . . . . . . . . .  	0018	PARA	STACK	
-CODE . . . . . . . . . . . . . .  	00A7	PARA	NONE	
+CODE . . . . . . . . . . . . . .  	00AA	PARA	NONE	
 DATA . . . . . . . . . . . . . .  	000E	PARA	NONE	
 
 Symbols:            
@@ -127,8 +129,9 @@ A  . . . . . . . . . . . . . . .  	L WORD	0000	DATA
 
 B  . . . . . . . . . . . . . . .  	L WORD	0002	DATA
 
-F6SECOND . . . . . . . . . . . .  	L NEAR	0094	CODE
-F83LESS  . . . . . . . . . . . .  	L NEAR	0048	CODE
+F6SECOND . . . . . . . . . . . .  	L NEAR	0097	CODE
+F83LESS  . . . . . . . . . . . .  	L NEAR	004B	CODE
+FINAL  . . . . . . . . . . . . .  	L NEAR	006F	CODE
 
 I  . . . . . . . . . . . . . . .  	L WORD	0004	DATA
 I1 . . . . . . . . . . . . . . .  	L WORD	0008	DATA
@@ -136,24 +139,24 @@ I2 . . . . . . . . . . . . . . .  	L WORD	000A	DATA
 
 K  . . . . . . . . . . . . . . .  	L WORD	0006	DATA
 
-MAIN . . . . . . . . . . . . . .  	F PROC	0000	CODE	Length = 00A7
-MAINFINAL  . . . . . . . . . . .  	L NEAR	00A6	CODE
-MAX1 . . . . . . . . . . . . . .  	L NEAR	008E	CODE
+MAIN . . . . . . . . . . . . . .  	F PROC	0000	CODE	Length = 00AA
+MAINFINAL  . . . . . . . . . . .  	L NEAR	00A9	CODE
+MAX1 . . . . . . . . . . . . . .  	L NEAR	0091	CODE
 
-SKIP2  . . . . . . . . . . . . .  	L NEAR	0087	CODE
+SKIP2  . . . . . . . . . . . . .  	L NEAR	008A	CODE
 
 T  . . . . . . . . . . . . . . .  	L WORD	000C	DATA
 
 @CPU . . . . . . . . . . . . . .  	TEXT  0101h		
-@FILENAME  . . . . . . . . . . .  	TEXT  proba		
+@FILENAME  . . . . . . . . . . .  	TEXT  lr3		
 @VERSION . . . . . . . . . . . .  	TEXT  510		
 
 
-     97 Source  Lines
-     97 Total   Lines
-     21 Symbols
+     99 Source  Lines
+     99 Total   Lines
+     22 Symbols
 
-  47976 + 461331 Bytes symbol space free
+  47988 + 461319 Bytes symbol space free
 
       0 Warning Errors
       0 Severe  Errors

@@ -48,6 +48,7 @@ Main      PROC  FAR
         neg T
 		mov cx, T
         mov i2, cx
+		jmp final
 		
 	  ; a<b
 	  f83less: 	  
@@ -66,6 +67,7 @@ Main      PROC  FAR
         mov i2, cx
 	  
       ;рассчет f6
+	  final:
       mov bx, k
       cmp bx, 0
       jl f6Second
