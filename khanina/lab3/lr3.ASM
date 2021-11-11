@@ -1,104 +1,101 @@
-; ‘â¥ª  ¯à®£à ¬¬ë
+; Ð¡Ñ‚ÐµÐº  Ð¿Ñ€Ð¾Ð³Ñ€Ð°Ð¼Ð¼Ñ‹
 AStack SEGMENT  STACK
     DW 12 DUP(?)
 AStack  ENDS
-;„ ­­ë¥ ¯à®£à ¬¬ë
+;Ð”Ð°Ð½Ð½Ñ‹Ðµ Ð¿Ñ€Ð¾Ð³Ñ€Ð°Ð¼Ð¼Ñ‹
 DATA      SEGMENT
-;„¨à¥ªâ¨¢ë ®¯¨á ­¨ï ¤ ­­ëå
+;Ð”Ð¸Ñ€ÐµÐºÑ‚Ð¸Ð²Ñ‹ Ð¾Ð¿Ð¸ÑÐ°Ð½Ð¸Ñ Ð´Ð°Ð½Ð½Ñ‹Ñ…
 a      DW    6
 b      DW    4
 i      DW    3
-k      DW    -2
+k      DW    2
 i1     DW    0
 i2     DW    0
+T      DW    0
 
 DATA      ENDS
 
-; Š®¤ ¯à®£à ¬¬ë
+; ÐšÐ¾Ð´ Ð¿Ñ€Ð¾Ð³Ñ€Ð°Ð¼Ð¼Ñ‹
 CODE      SEGMENT
       ASSUME CS:CODE, DS:DATA, SS:AStack
-	  
-; ƒ®«®¢­ ï ¯à®æ¥¤ãà 
+      
+; Ð“Ð¾Ð»Ð¾Ð²Ð½Ð°Ñ Ð¿Ñ€Ð¾Ñ†ÐµÐ´ÑƒÑ€Ð°
 Main      PROC  FAR
       push  DS
       sub   AX,AX
       push  AX
       mov   AX,DATA
       mov   DS,AX
-	  mov   CX, 0
-	  	  
-	  ;¢ëç¨á«¥­¨¥ f3
-	  mov cx, i
-	  mov ax, cx
-	  shl cx, 1
-	  shl cx, 1 ; 4i
-	  cmp a, bx
-	  jle f3second
-	    mov ax, cx
-		mov cx, 7
-		sub cx, ax
-		jmp f3final
-	  f3second:       
-	    add cx, ax
-		add cx, ax
-		mov ax, cx
-		mov cx, 8
-		sub cx, ax
-	  f3final:
-	  mov i1, cx
+      mov   CX, 0
+            
+      mov cx, i
+      mov ax, cx
+      shl cx, 1
+      shl cx, 1 ; cx = 4i
+	  mov T, cx ; T = 4i
+	  add T, ax
+      add T, ax ; T = 6i
+	  mov bx, b
+      cmp a, bx
 	  
-	  ;¢ëç¨á«¥­¨¥ f8
-	  mov cx, i
-	  mov ax, cx
-	  mov bx, b    ;
-	  cmp a, bx    ; áà ¢­¥­¨¥ a ¨ b
-	  jle f8second
-		shl cx, 1
-		shl cx, 1 ; 4i
-		add cx, ax
-		add cx, ax
-		add cx, 8
-		neg cx
-		jmp f8final
-	  f8second:
-		add cx, -1
-		mov ax, cx
-		shl cx, 1
-		shl cx, 1
-		sub cx, ax
-		neg cx
-		add cx, 9
-	  f8final:
-	  mov i1, cx
+	  ;Ð²Ñ‹Ñ‡Ð¸ÑÐ»ÐµÐ½Ð¸Ðµ f8
+      jle f8second
+        add T, 8
+        neg T
+		mov cx, T
+        jmp f8final
+      f8second:
+	    mov cx, i
+        add cx, -1
+        mov ax, cx
+        shl cx, 1
+        shl cx, 1
+        sub cx, ax
+        neg cx
+        add cx, 9
+      f8final:
+      mov i2, cx
 	  
-	  mov cx, i2
-	  cmp cx, 0
-	  jge skip2     
-	    neg cx
-		mov ax, cx
-	  skip2:
-	  
-	  ;à ááç¥â f6
-	  mov bx, k
-	  cmp bx, 0
-	  jl f6Second
-	    mov bx, ax
-		cmp bx, 7
-		jl max1
-		  mov cx, bx       ; |i2| >= 7
-		  jmp MainFinal
-		max1:
-		  mov cx, 7        ; |i2| < 7
-		  jmp MainFinal
-	    f6Second:
-	    mov cx, i1
-		sub cx, i2
-		cmp cx, 0
-		jge MainFinal
-			neg cx
-			jmp MainFinal
-	  MainFinal:           ; ¢ cx «¥¦¨â §­ ç¥­¨¥ äã­ªæ¨¨ f8
+	  ;Ð²Ñ‹Ñ‡Ð¸ÑÐ»ÐµÐ½Ð¸Ðµ f3
+      jle f3second
+        mov ax, cx
+        mov cx, 7
+        sub cx, ax
+        jmp f3final
+      f3second:       
+        mov ax, T
+        mov cx, 8
+        sub cx, ax
+      f3final:
+      mov i1, cx
+      
+      ;Ñ€Ð°ÑÑÑ‡ÐµÑ‚ f6
+      mov bx, k
+      cmp bx, 0
+      jl f6Second
+        mov bx, ax
+        cmp bx, 7
+		mov cx, i2
+        cmp cx, 0
+        jge skip2     
+          neg cx
+          mov ax, cx
+        skip2:
+        jl max1
+          mov cx, bx       ; |i2| >= 7
+          jmp MainFinal
+        max1:
+          mov cx, 7        ; |i2| < 7
+          jmp MainFinal
+        f6Second:
+        mov cx, i1
+        sub cx, i2
+        cmp cx, 0
+        jge MainFinal
+            neg cx
+            jmp MainFinal
+      MainFinal:          
       ret
 Main      ENDP
 CODE      ENDS
-END Main 
+END Main
