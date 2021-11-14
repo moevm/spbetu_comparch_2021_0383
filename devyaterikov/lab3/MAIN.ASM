@@ -50,15 +50,13 @@ Main      PROC  FAR
 		
 	  f1f3: ; a <= b
 		add cx, i
-		add cx, 4
 		mov i1, cx
+		mov i1, 4
 		
-		mov cx, ax
-		shl ax, 1
-		add ax, cx
-		neg ax
-		add ax, 8
-		mov i2, ax
+		shl cx, 1
+		neg cx
+		add cx, 8
+		mov i2, cx
 	  f1f3End:  
 	  
 	  ;f2
@@ -71,17 +69,14 @@ Main      PROC  FAR
 	  jge f2
 	  	add cx, 10 ; k < 0
 	  	cmp ax, cx
-	  	jge max
-	  		mov ax, cx
-	  	max: ; ax >= cx	
-	  	jmp f2End
+	  	jge MainEnd
+	  		mov ax, cx	
+	  	jmp MainEnd
 	  f2: ; k >= 0
 	  	add ax, cx
 	  	cmp ax, 0
-	  	jge modul
+	  	jge MainEnd
 	  		neg ax
-	  	modul: ; ax >= 0
-	  f2End:
 	  MainEnd: ; в ax лежит значение функции f2
       ret
 Main      ENDP
