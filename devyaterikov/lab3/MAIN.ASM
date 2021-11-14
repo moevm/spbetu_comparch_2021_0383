@@ -51,7 +51,7 @@ Main      PROC  FAR
 	  f1f3: ; a <= b
 		add cx, i
 		mov i1, cx
-		mov i1, 4
+		add i1, 4
 		
 		shl cx, 1
 		neg cx
