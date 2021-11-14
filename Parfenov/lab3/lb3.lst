@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler Version 5.10                  11/9/21 12:18:19
+Microsoft (R) Macro Assembler Version 5.10                  11/14/21 17:30:3
                                                              Page     1-1
 
 
@@ -22,14 +22,14 @@
  0000				DATA      SEGMENT
  0000  0009			a   DW  9
  0002  0006			b   DW  6
- 0004  FFFC			i   DW  -4
+ 0004  0008			i   DW  8
  0006  FFFF			k   DW  -1
  0008  0000			i1  DW  0
  000A  0000			i2  DW  0
  000C  0000			res DW  0
- 000E  0000			buff DW 0
 
- 0010				DATA      ENDS
+
+ 000E				DATA      ENDS
 
  0000				CODE      SEGMENT
 				  ASSUME CS:CODE, DS:DATA, SS:AStack
@@ -41,127 +41,78 @@
  0004  B8 ---- R		          mov   AX,DATA
  0007  8E D8			          mov   DS,AX
  0009  B9 0000			          mov   CX, 0
-
-
  000C  8B 0E 0004 R		          mov cx, i
  0010  8B C1			          mov ax, cx
  0012  D1 E1			          shl cx, 1
- 0014  89 0E 000E R		          mov buff, cx
-
- 0018  8B 1E 0002 R		          mov bx, b
-
- 001C  39 1E 0000 R		          cmp a, bx
-
+ 0014  8B 1E 0002 R		          mov bx, b
+ 0018  39 1E 0000 R		          cmp a, bx
 				          ; ���⥬� f1, f1s - �� a <= b
-
- 0020  7E 1F			          jle f12
+ 001C  7E 19			          jle f12
 				            ; ���᫥��� i1 �� a > b
-Microsoft (R) Macro Assembler Version 5.10                  11/9/21 12:18:19
+ 001E  F7 D9			            neg cx
+ 0020  83 C1 0F			            add cx, 15
+ 0023  89 0E 0008 R		            mov i1, cx
+				            ; ���᫥��� i2 �� a > b
+ 0027  D1 E1			            shl cx, 1
+ 0029  2B C8			            sub cx, ax
+ 002B  2B C8			            sub cx, ax
+Microsoft (R) Macro Assembler Version 5.10                  11/14/21 17:30:3
                                                              Page     1-2
 
 
- 0022  F7 D9			            neg cx
- 0024  83 C1 0F			            add cx, 15
- 0027  89 0E 0008 R		            mov i1, cx
-
-				            ; ���᫥��� i2 �� a > b
-
- 002B  8B 0E 000E R		            mov cx, buff
- 002F  D1 E1			            shl cx, 1
- 0031  03 C8			            add cx, ax
- 0033  03 C8			            add cx, ax
- 0035  F7 D9			            neg cx
- 0037  83 E9 08			            sub cx, 8
-
- 003A  89 0E 000A R		            mov i2, cx
-
- 003E  EB 19 90			            jmp takeModule
-
- 0041				          f12: ; a <= b
-
-
+ 002D  83 E9 26			            sub cx, 38
+ 0030  89 0E 000A R		            mov i2, cx
+ 0034  EB 13 90			            jmp takeModule
+ 0037				          f12: ; a <= b
 				            ; ���᫥��� i1 �� a <= b
-
- 0041  03 C8			            add cx, ax
- 0043  83 C1 04			            add cx, 4
-
- 0046  89 0E 0008 R		            mov i1, cx
-
+ 0037  03 C8			            add cx, ax
+ 0039  83 C1 04			            add cx, 4
+ 003C  89 0E 0008 R		            mov i1, cx
 				            ; ���᫥��� i2  �� a <= b
- 004A  8B 0E 000E R		            mov cx, buff
- 004E  03 C8			            add cx, ax
- 0050  F7 D9			            neg cx
- 0052  83 C1 0C			            add cx, 12
- 0055  89 0E 000A R		            mov i2, cx
+ 0040  F7 D9			            neg cx
+ 0042  83 C1 10			            add cx, 16
+ 0045  89 0E 000A R		            mov i2, cx
 
-
- 0059				          takeModule:
+ 0049				          takeModule:
 				          ; ���⨥ ����� �� i1
- 0059  8B 0E 0008 R		          mov cx, i1
-
- 005D  83 F9 00			          cmp cx, 0
-
- 0060  7C 03			          jl module_i1
-
- 0062  EB 07 90			            jmp skip1
-
- 0065				            module_i1:
- 0065  F7 D9			              neg cx
- 0067  89 0E 0008 R		              mov i1, cx
-
-				          ; ���⨥ ����� �� i2
- 006B				          skip1:
- 006B  8B 0E 000A R		          mov cx, i2
-
- 006F  83 F9 00			          cmp cx, 0
-Microsoft (R) Macro Assembler Version 5.10                  11/9/21 12:18:19
-                                                             Page     1-3
-
-
-
- 0072  7C 03			          jl module_i2
-
- 0074  EB 07 90			            jmp skip2
-
- 0077				            module_i2:
- 0077  F7 D9			              neg cx
- 0079  89 0E 000A R		              mov i2, cx
-
- 007D				          skip2:
-
- 007D  83 3E 0006 R 00		          cmp k, 0
+ 0049  83 3E 0008 R 00		          cmp i1, 0
+ 004E  7F 0A			          jg skip1
+ 0050  8B 0E 0008 R		              mov cx, i1
+ 0054  F7 D9			              neg cx
+ 0056  89 0E 0008 R		              mov i1, cx
+ 005A				          skip1:
+ 005A  83 3E 0006 R 00		          cmp k, 0
 
 				          ; ���᫥��� res = f3, f3s �� k < 0
- 0082  7C 1B			          jl f3s
+ 005F  7C 1B			          jl f3s
 
-				            ; mov cx, i1
+ 0061  83 3E 0008 R 06		            cmp i1, 6
+ 0066  7F 09			            jg first_bigger
 
- 0084  83 3E 0008 R 06		            cmp i1, 6
- 0089  7F 09			            jg first_bigger
+ 0068  C7 06 000C R 0006	            mov res, 6
+ 006E  EB 29 90			            jmp Mainend
 
- 008B  C7 06 000C R 0006	            mov res, 6
- 0091  EB 18 90			            jmp Mainend
+ 0071				            first_bigger:
+ 0071  8B 0E 0008 R		              mov cx, i1
+ 0075  89 0E 000C R		              mov res, cx
+ 0079  EB 1E 90			              jmp Mainend
+ 007C				          f3s: ; k < 0
+ 007C  83 3E 000A R 00		          cmp i2, 0
+ 0081  7F 0A			          jg skip2
+ 0083  8B 0E 000A R		            mov cx, i2
+ 0087  F7 D9			            neg cx
+ 0089  89 0E 000A R		            mov i2, cx
+ 008D				          skip2:
+ 008D  8B 0E 0008 R		             mov cx, i1
+ 0091  03 0E 000A R		             add cx, i2
+ 0095  89 0E 000C R		             mov res, cx
+ 0099				          Mainend:
+ 0099  CB			          ret
 
- 0094				            first_bigger:
- 0094  8B 0E 0008 R		              mov cx, i1
- 0098  89 0E 000C R		              mov res, cx
- 009C  EB 0D 90			              jmp Mainend
-
-
- 009F				          f3s: ; k < 0
-
- 009F  8B 0E 0008 R		             mov cx, i1
- 00A3  03 0E 000A R		             add cx, i2
- 00A7  89 0E 000C R		             mov res, cx
-
-
- 00AB				          Mainend:
- 00AB  CB			          ret
-
- 00AC				Main      ENDP
- 00AC				CODE      ENDS
+ 009A				Main      ENDP
+ 009A				CODE      ENDS
 				          END Main
-Microsoft (R) Macro Assembler Version 5.10                  11/9/21 12:18:19
+Microsoft (R) Macro Assembler Version 5.10                  11/14/21 17:30:3
                                                              Symbols-1
 
 
@@ -170,8 +121,8 @@ Segments and Groups:
                 N a m e         	Length	 Align	Combine Class
 
 ASTACK . . . . . . . . . . . . .  	0018	PARA	STACK
-CODE . . . . . . . . . . . . . .  	00AC	PARA	NONE
-DATA . . . . . . . . . . . . . .  	0010	PARA	NONE
+CODE . . . . . . . . . . . . . .  	009A	PARA	NONE
+DATA . . . . . . . . . . . . . .  	000E	PARA	NONE
 
 Symbols:
 
@@ -180,13 +131,12 @@ Symbols:
 A  . . . . . . . . . . . . . . .  	L WORD	0000	DATA
 
 B  . . . . . . . . . . . . . . .  	L WORD	0002	DATA
-BUFF . . . . . . . . . . . . . .  	L WORD	000E	DATA
 
 EOFLINE  . . . . . . . . . . . .  	NUMBER	0024
 
-F12  . . . . . . . . . . . . . .  	L NEAR	0041	CODE
-F3S  . . . . . . . . . . . . . .  	L NEAR	009F	CODE
-FIRST_BIGGER . . . . . . . . . .  	L NEAR	0094	CODE
+F12  . . . . . . . . . . . . . .  	L NEAR	0037	CODE
+F3S  . . . . . . . . . . . . . .  	L NEAR	007C	CODE
+FIRST_BIGGER . . . . . . . . . .  	L NEAR	0071	CODE
 
 I  . . . . . . . . . . . . . . .  	L WORD	0004	DATA
 I1 . . . . . . . . . . . . . . .  	L WORD	0008	DATA
@@ -194,36 +144,26 @@ I2 . . . . . . . . . . . . . . .  	L WORD	000A	DATA
 
 K  . . . . . . . . . . . . . . .  	L WORD	0006	DATA
 
-MAIN . . . . . . . . . . . . . .  	F PROC	0000	CODE	Length = 00AC
-MAINEND  . . . . . . . . . . . .  	L NEAR	00AB	CODE
-MODULE_I1  . . . . . . . . . . .  	L NEAR	0065	CODE
-MODULE_I2  . . . . . . . . . . .  	L NEAR	0077	CODE
+MAIN . . . . . . . . . . . . . .  	F PROC	0000	CODE	Length = 009A
+MAINEND  . . . . . . . . . . . .  	L NEAR	0099	CODE
 
 RES  . . . . . . . . . . . . . .  	L WORD	000C	DATA
 
-SKIP1  . . . . . . . . . . . . .  	L NEAR	006B	CODE
-SKIP2  . . . . . . . . . . . . .  	L NEAR	007D	CODE
+SKIP1  . . . . . . . . . . . . .  	L NEAR	005A	CODE
+SKIP2  . . . . . . . . . . . . .  	L NEAR	008D	CODE
 
-TAKEMODULE . . . . . . . . . . .  	L NEAR	0059	CODE
+TAKEMODULE . . . . . . . . . . .  	L NEAR	0049	CODE
 
 @CPU . . . . . . . . . . . . . .  	TEXT  0101h
 @FILENAME  . . . . . . . . . . .  	TEXT  lb3
 @VERSION . . . . . . . . . . . .  	TEXT  510
 
-Microsoft (R) Macro Assembler Version 5.10                  11/9/21 12:18:19
 
-                                                             Symbols-2
+    103 Source  Lines
+    103 Total   Lines
+     24 Symbols
 
-
-
-
-
-
-    148 Source  Lines
-    148 Total   Lines
-     27 Symbols
-
-  48030 + 457180 Bytes symbol space free
+  48030 + 459230 Bytes symbol space free
 
       0 Warning Errors
       0 Severe  Errors

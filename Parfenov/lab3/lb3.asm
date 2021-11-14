@@ -15,12 +15,12 @@ AStack    ENDS
 DATA      SEGMENT
 a   DW  9
 b   DW  6
-i   DW  -4
+i   DW  8
 k   DW  -1
 i1  DW  0
 i2  DW  0
 res DW  0
-buff DW 0
+
 
 DATA      ENDS
 
@@ -34,92 +34,46 @@ Main      PROC  FAR
           mov   AX,DATA
           mov   DS,AX
           mov   CX, 0
-
-
           mov cx, i
           mov ax, cx
           shl cx, 1
-          mov buff, cx
-
           mov bx, b
-
           cmp a, bx
-
           ; Система f1, f1s - при a <= b
-
           jle f12
             ; вычисление i1 при a > b
             neg cx
             add cx, 15
             mov i1, cx
-
             ; вычисление i2 при a > b
-
-            mov cx, buff
             shl cx, 1
-            add cx, ax
-            add cx, ax
-            neg cx
-            sub cx, 8
-
+            sub cx, ax
+            sub cx, ax
+            sub cx, 38
             mov i2, cx
-
             jmp takeModule
-
           f12: ; a <= b
-
-
             ; вычисление i1 при a <= b
-
             add cx, ax
             add cx, 4
-
             mov i1, cx
-
             ; вычисление i2  при a <= b
-            mov cx, buff
-            add cx, ax
             neg cx
-            add cx, 12
+            add cx, 16
             mov i2, cx
-
 
           takeModule:
           ; взятие модуля от i1
-          mov cx, i1
-
-          cmp cx, 0
-
-          jl module_i1
-
-            jmp skip1
-
-            module_i1:
+          cmp i1, 0
+          jg skip1
+              mov cx, i1
               neg cx
               mov i1, cx
-
-          ; взятие модуля от i2
           skip1:
-          mov cx, i2
-
-          cmp cx, 0
-
-          jl module_i2
-
-            jmp skip2
-
-            module_i2:
-              neg cx
-              mov i2, cx
-
-          skip2:
-
           cmp k, 0
 
           ; Вычисление res = f3, f3s при k < 0
           jl f3s
-
-            ; mov cx, i1
 
             cmp i1, 6
             jg first_bigger
@@ -131,15 +85,16 @@ Main      PROC  FAR
               mov cx, i1
               mov res, cx
               jmp Mainend
-
-
           f3s: ; k < 0
-
+          cmp i2, 0
+          jg skip2
+            mov cx, i2
+            neg cx
+            mov i2, cx
+          skip2:
              mov cx, i1
              add cx, i2
              mov res, cx
-
-
           Mainend:
           ret
 
