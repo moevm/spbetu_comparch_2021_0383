@@ -12,6 +12,16 @@ DATA      ENDS
 CODE      SEGMENT
     
 SUBR_INT  PROC FAR
+	JMP int_start
+	prog_SP DW 0000h
+	prog_SS DW 0000h
+	INT_STACK DB 40 DUP(0)
+int_start:
+	MOV prog_SP, SP
+	MOV prog_SS, SS
+	MOV SP, SEG INT_STACK
+	MOV SS, SP
+	MOV SP, offset int_start
 	PUSH AX    ; сохранение изменяемых регистров
 	PUSH CX
 		
@@ -38,8 +48,10 @@ SUBR_INT  PROC FAR
 	MOV AL, AH
 	OUT 61H, AL ; Выключение динамика (изначальное значение порта 61h)
             ;<конец действий по обработке прерывания>
-	POP CX
+	POP  CX
 	POP  AX   ; восстановление регистров
+	MOV  SS, prog_SS
+	MOV  SP, prog_SP
 	MOV  AL, 20H
 	OUT  20H,AL
 	IRET
@@ -63,8 +75,19 @@ Main	PROC  FAR
 	INT  21H             ; меняем прерывание
 	POP  DS
 	
-	MOV AX, 8000
-	INT 60H
+	L1:                  ;
+	mov   ah,1           ;
+	int   21h            ;
+	cmp   al, 0Dh        ; код символа после нажатя Enter
+	je    exit
+	cmp   al, 1Bh        ; код символа после нажатия Escape
+	jne   L1
+	MOV   AX, 8000
+	INT   60H
+	jmp   L1
+	exit:
+	
+	
 
 	; <Восстановление изначального вектора прерывания>
 	CLI
