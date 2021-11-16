@@ -1,8 +1,8 @@
-<<<<<<< HEAD
+
 Microsoft (R) Macro Assembler Version 5.10                  9/30/21 02:35:12
 =======
 Microsoft (R) Macro Assembler Version 5.10                  9/30/21 00:53:59
->>>>>>> master
+
                                                              Page     1-1
 
 
@@ -60,11 +60,11 @@
 				;7
  0020  8A 47 03			mov al,[bx]+3
  0023  8B 4F 03			mov cx,3[bx]
-<<<<<<< HEAD
+
 Microsoft (R) Macro Assembler Version 5.10                  9/30/21 02:35:12
 =======
 Microsoft (R) Macro Assembler Version 5.10                  9/30/21 00:53:59
->>>>>>> master
+
                                                              Page     1-2
 
 
@@ -110,11 +110,11 @@
  0060				Main ENDP
  0060				CODE ENDS
 				END Main
-<<<<<<< HEAD
+
 Microsoft (R) Macro Assembler Version 5.10                  9/30/21 02:35:12
 =======
 Microsoft (R) Macro Assembler Version 5.10                  9/30/21 00:53:59
->>>>>>> master
+
                                                              Symbols-1
 
 
