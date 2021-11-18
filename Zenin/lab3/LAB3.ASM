@@ -129,7 +129,8 @@ CODE SEGMENT
         mov k, cx
 
 
-        
+        mov cx, i
+        add cx, i       ;cx = 2i
         
         mov ax, a
         mov bx, b
@@ -138,15 +139,13 @@ CODE SEGMENT
         
         
         mov ax, 15      ;f1.1
-        sub ax, i       ;
-        sub ax, i       ;
+        sub ax, cx      ;
         mov res1, ax    ;f1.1
         
         mov ax, i       ;f4.1
         shl ax, 1       ;
         shl ax, 1       ;
-        add ax, i       ;
-        add ax, i       ;
+        add ax, cx      ;
         sub ax, 4       ;
         neg ax          ;
         mov res2, ax    ;f4.1
@@ -161,11 +160,8 @@ CODE SEGMENT
         add ax, 4       ;
         mov res1, ax    ;f1.2
         
-        mov ax, i       ;f4.2
-        add ax, 2       ;
-        mov dx, ax      ;
-        shl ax, 1       ;
-        add ax, dx      ;
+        mov ax, res1    ;f4.2
+        sub ax, 2       ;
         mov res2, ax    ;f4.2
 
         
