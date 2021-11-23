@@ -5,12 +5,10 @@ AStack  ENDS
 ;Данные программы
 DATA      SEGMENT
 ;Директивы описания данных
-string DB    15, 15 DUP('$')
-sign   DB    1
-a      DW    1
-b      DW    2
+a      DW    2
+b      DW    1
 i      DW    3
-k      DW    4
+k      DW    0
 i1     DW    0
 i2     DW    0
 
@@ -34,73 +32,49 @@ Main      PROC  FAR
 	  ;вычисление f4
 	  mov cx, i
       mov ax, cx
+	  shl ax, 1
+	  add ax, cx  ; в ax = 3i
       mov bx, b
 	  cmp a, bx
-	  jle f4second  ; a != bx
-        shl cx, 1
-		mov ax, cx
-		shl cx, 1
-		add cx, ax
-		add cx, -4
-		neg cx
-		jmp f4final
-	  f4second:       ; a = bx
-	    add cx, 2
-		mov ax, cx
-		shl cx, 1
-		add cx, ax
-	  f4final:
-	  mov i1, cx
-	  
-      ;вычисление f8
-      mov cx, i
-      mov ax, cx
-      cmp a, bx
-      jle f8second  ; a != bx
-        shl cx, 1
-		mov ax, cx
-		shl cx, 1
-		add cx, ax
-		add cx, 8
-        neg cx
-        jmp f8final
-      f8second:  ; a = bx
-        add cx, -1
-        mov ax, cx
-		shl cx, 1
-		add cx, ax
-        neg cx
-        add cx, 9
-      f8final:
-      mov i2, cx   
 
-      
+	  jle ifless
+        shl ax, 1
+		mov cx, ax
+		sub ax, 4
+		neg ax
+		mov i1, ax
+        add cx, 8
+		neg cx
+		mov i2, cx
+        jmp finfun
+
+	    ifless:   
+		mov cx, ax
+		add ax, 6
+		mov i1, ax
+		mov ax, cx
+		mov cx, 12
+		sub cx, ax
+		mov i2, cx
 	  
 	  ;рассчет f3
+	  finfun:
 	  mov bx, k
 	  cmp bx, 0
 	  je f3Second ; k != 0
-        mov bx, i1
-		cmp bx, i2
+		cmp cx, i1
         jle min1
-          mov cx, i2        ; i2 <= i1
+          mov cx, i1        ; i2 <= i1
 		  jmp MainFinal
 		min1:
-		  mov cx, bx       ; i2 > i1
 		  jmp MainFinal
         
-        
-	    
 	  f3Second:  ; k = 0
-        mov cx, i1
-        add cx, i2
+        add cx, i1
 	    cmp cx, 0
-	    jge skip1     ;модуль i1 + i2
+	    jge MainFinal     ;модуль i1 + i2
 	      neg cx
-		  mov i1, cx
-          jmp MainFinal
-	    skip1:
-          jmp MainFinal
+		  jmp MainFinal
 		
 	  MainFinal:           ; в cx лежит значение функции f3
       ret

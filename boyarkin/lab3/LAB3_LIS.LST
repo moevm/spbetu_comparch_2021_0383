@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler Version 5.10                  11/15/21 23:37:4
+Microsoft (R) Macro Assembler Version 5.10                  11/23/21 15:58:5
                                                              Page     1-1
 
 
@@ -13,20 +13,14 @@
  0000				DATA      SEGMENT
 				;Директивы описания данны
 				х
- 0000  0F			string DB    15, 15 DUP('$')
-       000F[			
-	   24			
-			 ]	
+ 0000  0002			a      DW    2
+ 0002  0001			b      DW    1
+ 0004  0003			i      DW    3
+ 0006  0000			k      DW    0
+ 0008  0000			i1     DW    0
+ 000A  0000			i2     DW    0
 				
- 0010  01			sign   DB    1
- 0011  0001			a      DW    1
- 0013  0002			b      DW    2
- 0015  0003			i      DW    3
- 0017  0004			k      DW    4
- 0019  0000			i1     DW    0
- 001B  0000			i2     DW    0
-				
- 001D				DATA      ENDS
+ 000C				DATA      ENDS
 				
 				; Код программы
  0000				CODE      SEGMENT
@@ -44,91 +38,64 @@
 					  
 					  	  
 					  ;вычисление f4
- 000C  8B 0E 0015 R			  mov cx, i
+ 000C  8B 0E 0004 R			  mov cx, i
  0010  8B C1			      mov ax, cx
- 0012  8B 1E 0013 R		      mov bx, b
- 0016  39 1E 0011 R			  cmp a, bx
- 001A  7E 10				  jle f4second  ; a != bx
- 001C  D1 E1			        shl cx, 1
- 001E  8B C1					mov ax, cx
- 0020  D1 E1					shl cx, 1
- 0022  03 C8					add cx, ax
- 0024  83 C1 FC					add cx, -4
- 0027  F7 D9					neg cx
- 0029  EB 0A 90					jmp f4final
-Microsoft (R) Macro Assembler Version 5.10                  11/15/21 23:37:4
+ 0012  D1 E0				  shl ax, 1
+ 0014  03 C1				  add ax, cx  ; в ax = 3i
+ 0016  8B 1E 0002 R		      mov bx, b
+ 001A  39 1E 0000 R			  cmp a, bx
+				
+ 001E  7E 18				  jle ifless
+ 0020  D1 E0			        shl ax, 1
+ 0022  8B C8					mov cx, ax
+ 0024  2D 0004					sub ax, 4
+ 0027  F7 D8					neg ax
+ 0029  A3 0008 R				mov i1, ax
+ 002C  83 C1 08			        add cx, 8
+ 002F  F7 D9					neg cx
+ 0031  89 0E 000A R				mov i2, cx
+ 0035  EB 14 90			        jmp finfun
+				
+Microsoft (R) Macro Assembler Version 5.10                  11/23/21 15:58:5
                                                              Page     1-2
 
 
- 002C					  f4second:       ; a = bx
- 002C  83 C1 02				    add cx, 2
- 002F  8B C1					mov ax, cx
- 0031  D1 E1					shl cx, 1
- 0033  03 C8					add cx, ax
- 0035					  f4final:
- 0035  89 0E 0019 R			  mov i1, cx
-					  
-				      ;вычисление f8
- 0039  8B 0E 0015 R		      mov cx, i
- 003D  8B C1			      mov ax, cx
- 003F  39 1E 0011 R		      cmp a, bx
- 0043  7E 10			      jle f8second  ; a != bx
- 0045  D1 E1			        shl cx, 1
- 0047  8B C1					mov ax, cx
- 0049  D1 E1					shl cx, 1
- 004B  03 C8					add cx, ax
- 004D  83 C1 08					add cx, 8
- 0050  F7 D9			        neg cx
- 0052  EB 0F 90			        jmp f8final
- 0055				      f8second:  ; a = bx
- 0055  83 C1 FF			        add cx, -1
- 0058  8B C1			        mov ax, cx
- 005A  D1 E1					shl cx, 1
- 005C  03 C8					add cx, ax
- 005E  F7 D9			        neg cx
- 0060  83 C1 09			        add cx, 9
- 0063				      f8final:
- 0063  89 0E 001B R		      mov i2, cx   
-				
-				      
+ 0038					    ifless:   
+ 0038  8B C8					mov cx, ax
+ 003A  05 0006					add ax, 6
+ 003D  A3 0008 R				mov i1, ax
+ 0040  8B C1					mov ax, cx
+ 0042  B9 000C					mov cx, 12
+ 0045  2B C8					sub cx, ax
+ 0047  89 0E 000A R				mov i2, cx
 					  
 					  ;рассчет f3
- 0067  8B 1E 0017 R			  mov bx, k
- 006B  83 FB 00				  cmp bx, 0
- 006E  74 16				  je f3Second ; k != 0
- 0070  8B 1E 0019 R		        mov bx, i1
- 0074  3B 1E 001B R				cmp bx, i2
- 0078  7E 07			        jle min1
- 007A  8B 0E 001B R		          mov cx, i2        ; i2 <= i1
- 007E  EB 1F 90					  jmp MainFinal
- 0081						min1:
- 0081  8B CB					  mov cx, bx       ; i2 > i1
- 0083  EB 1A 90					  jmp MainFinal
+ 004B					  finfun:
+ 004B  8B 1E 0006 R			  mov bx, k
+ 004F  83 FB 00				  cmp bx, 0
+ 0052  74 10				  je f3Second ; k != 0
+ 0054  3B 0E 0008 R				cmp cx, i1
+ 0058  7E 07			        jle min1
+ 005A  8B 0E 0008 R		          mov cx, i1        ; i2 <= i1
+ 005E  EB 12 90					  jmp MainFinal
+ 0061						min1:
+ 0061  EB 0F 90					  jmp MainFinal
 				        
-				        
-					    
- 0086					  f3Second:  ; k = 0
- 0086  8B 0E 0019 R		        mov cx, i1
- 008A  03 0E 001B R		        add cx, i2
- 008E  83 F9 00				    cmp cx, 0
- 0091  7D 09				    jge skip1     ;модуль i1 + i2
- 0093  F7 D9				      neg cx
- 0095  89 0E 0019 R				  mov i1, cx
-Microsoft (R) Macro Assembler Version 5.10                  11/15/21 23:37:4
-                                                             Page     1-3
-
-
- 0099  EB 04 90			          jmp MainFinal
- 009C					    skip1:
- 009C  EB 01 90			          jmp MainFinal
+ 0064					  f3Second:  ; k = 0
+ 0064  03 0E 0008 R		        add cx, i1
+ 0068  83 F9 00				    cmp cx, 0
+ 006B  7D 05				    jge MainFinal     ;модуль i1 
+				+ i2
+ 006D  F7 D9				      neg cx
+ 006F  EB 01 90					  jmp MainFinal
 						
- 009F					  MainFinal:           ; в cx лежи
+ 0072					  MainFinal:           ; в cx лежи
 				т значение функции f3
- 009F  CB			      ret
- 00A0				Main      ENDP
- 00A0				CODE      ENDS
+ 0072  CB			      ret
+ 0073				Main      ENDP
+ 0073				CODE      ENDS
 				END Main
-Microsoft (R) Macro Assembler Version 5.10                  11/15/21 23:37:4
+Microsoft (R) Macro Assembler Version 5.10                  11/23/21 15:58:5
                                                              Symbols-1
 
 
@@ -137,47 +104,41 @@ Segments and Groups:
                 N a m e         	Length	 Align	Combine Class
 
 ASTACK . . . . . . . . . . . . .  	0018	PARA	STACK	
-CODE . . . . . . . . . . . . . .  	00A0	PARA	NONE	
-DATA . . . . . . . . . . . . . .  	001D	PARA	NONE	
+CODE . . . . . . . . . . . . . .  	0073	PARA	NONE	
+DATA . . . . . . . . . . . . . .  	000C	PARA	NONE	
 
 Symbols:            
 
                 N a m e         	Type	 Value	 Attr
 
-A  . . . . . . . . . . . . . . .  	L WORD	0011	DATA
+A  . . . . . . . . . . . . . . .  	L WORD	0000	DATA
 
-B  . . . . . . . . . . . . . . .  	L WORD	0013	DATA
+B  . . . . . . . . . . . . . . .  	L WORD	0002	DATA
 
-F3SECOND . . . . . . . . . . . .  	L NEAR	0086	CODE
-F4FINAL  . . . . . . . . . . . .  	L NEAR	0035	CODE
-F4SECOND . . . . . . . . . . . .  	L NEAR	002C	CODE
-F8FINAL  . . . . . . . . . . . .  	L NEAR	0063	CODE
-F8SECOND . . . . . . . . . . . .  	L NEAR	0055	CODE
+F3SECOND . . . . . . . . . . . .  	L NEAR	0064	CODE
+FINFUN . . . . . . . . . . . . .  	L NEAR	004B	CODE
 
-I  . . . . . . . . . . . . . . .  	L WORD	0015	DATA
-I1 . . . . . . . . . . . . . . .  	L WORD	0019	DATA
-I2 . . . . . . . . . . . . . . .  	L WORD	001B	DATA
+I  . . . . . . . . . . . . . . .  	L WORD	0004	DATA
+I1 . . . . . . . . . . . . . . .  	L WORD	0008	DATA
+I2 . . . . . . . . . . . . . . .  	L WORD	000A	DATA
+IFLESS . . . . . . . . . . . . .  	L NEAR	0038	CODE
 
-K  . . . . . . . . . . . . . . .  	L WORD	0017	DATA
+K  . . . . . . . . . . . . . . .  	L WORD	0006	DATA
 
-MAIN . . . . . . . . . . . . . .  	F PROC	0000	CODE	Length = 00A0
-MAINFINAL  . . . . . . . . . . .  	L NEAR	009F	CODE
-MIN1 . . . . . . . . . . . . . .  	L NEAR	0081	CODE
-
-SIGN . . . . . . . . . . . . . .  	L BYTE	0010	DATA
-SKIP1  . . . . . . . . . . . . .  	L NEAR	009C	CODE
-STRING . . . . . . . . . . . . .  	L BYTE	0000	DATA
+MAIN . . . . . . . . . . . . . .  	F PROC	0000	CODE	Length = 0073
+MAINFINAL  . . . . . . . . . . .  	L NEAR	0072	CODE
+MIN1 . . . . . . . . . . . . . .  	L NEAR	0061	CODE
 
 @CPU . . . . . . . . . . . . . .  	TEXT  0101h		
 @FILENAME  . . . . . . . . . . .  	TEXT  lab3		
 @VERSION . . . . . . . . . . . .  	TEXT  510		
 
 
-    109 Source  Lines
-    109 Total   Lines
-     25 Symbols
+     83 Source  Lines
+     83 Total   Lines
+     20 Symbols
 
-  47962 + 459298 Bytes symbol space free
+  48040 + 461267 Bytes symbol space free
 
       0 Warning Errors
       0 Severe  Errors
