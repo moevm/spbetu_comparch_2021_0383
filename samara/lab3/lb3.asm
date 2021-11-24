@@ -81,17 +81,4 @@ Main      PROC  FAR
 		  jmp MainFinal
 	  f3Second:  ; k = 0
         mov cx, i1
-        add cx, i2
-	    cmp cx, 0
-	    jge skip1     ; |i1 + i2|
-	      neg cx
-		  mov i1, cx
-          jmp MainFinal
-	    skip1:
-          jmp MainFinal
-		
-	  MainFinal:   ; в cx лежит значение функции f3
-      ret
-Main      ENDP
-CODE      ENDS
-END Main 
+  

@@ -129,30 +129,14 @@ B  . . . . . . . . . . . . . . .  	L WORD	0002	DATA
 
 F2FINAL  . . . . . . . . . . . .  	L NEAR	002F	CODE
 F2SECOND . . . . . . . . . . . .  	L NEAR	0028	CODE
-F3SECOND . . . . . . . . . . . .  	L NEAR	0080	CODE
-F8FINAL  . . . . . . . . . . . .  	L NEAR	005D	CODE
-F8SECOND . . . . . . . . . . . .  	L NEAR	004F	CODE
-
-I  . . . . . . . . . . . . . . .  	L WORD	0004	DATA
-I1 . . . . . . . . . . . . . . .  	L WORD	0008	DATA
-I2 . . . . . . . . . . . . . . .  	L WORD	000A	DATA
-
-K  . . . . . . . . . . . . . . .  	L WORD	0006	DATA
-
-MAIN . . . . . . . . . . . . . .  	F PROC	0000	CODE	Length = 009A
-MAINFINAL  . . . . . . . . . . .  	L NEAR	0099	CODE
-MIN1 . . . . . . . . . . . . . .  	L NEAR	007B	CODE
-
-SKIP1  . . . . . . . . . . . . .  	L NEAR	0096	CODE
-
-@CPU . . . . . . . . . . . . . .  	TEXT  0101h		
+F3SECOND . . . . . . . . . . . .  	L  . . . . . . .  	TEXT  0101h		
 @FILENAME  . . . . . . . . . . .  	TEXT  lb3		
 @VERSION . . . . . . . . . . . .  	TEXT  510		
 
 
-     97 Source  Lines
-     97 Total   Lines
-     23 Symbols
+     85 Source  Lines
+     85 Total   Lines
+     20 Symbols
 
   47992 + 461315 Bytes symbol space free
 
