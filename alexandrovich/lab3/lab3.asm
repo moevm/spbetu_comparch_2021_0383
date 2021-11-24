@@ -31,7 +31,6 @@ Main      PROC  FAR
       mov i, 2
       mov k, 1
 	  
-	  ;вычисление f1
 	  mov cx, i
 	  mov ax, cx
 	  shl cx, 1
@@ -40,28 +39,17 @@ Main      PROC  FAR
 	  jle f1second
 		neg cx
 		add cx, 15
-		jmp f1final
+		mov i1, cx
+		shl cx, 1
+		add cx, -33
+		mov i2, cx
 	  f1second:
 		add cx, ax
 		add cx, 4
-	  f1final:
-	  mov i1, cx
-	  
-	  ;вычисление f2
-	  mov cx, i
-	  shl cx, 1
-	  mov ax, cx
-	  shl cx, 1
-	  cmp a, bx
-	  jle f2second
-		add cx, 3
-		neg cx
-		jmp f2final
-	  f2second:       
-	    add cx, ax
-		add cx, -10
-	  f2final:
-	  mov i2, cx
+		mov i1, cx
+		shl cx, 1
+		add cx, -18
+		mov i2, cx
 	  
 	  ;рассчет res
 	  mov bx, k
