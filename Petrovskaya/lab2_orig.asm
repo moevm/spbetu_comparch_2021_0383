@@ -50,24 +50,19 @@ Main      PROC  FAR
         mov  mem1,ax
 ;  Косвенная адресация
         mov  al,[bx]
-        ;mov  mem3,[bx] -> lab2.asm(54): error A2052: Improper operand type -> 
-        	;Инструкция MOV пересылает один байт или слово только между регистрами или регистром и памятью
-        	;и НЕ может передавать данные между двумя адресами памяти
+        mov  mem3,[bx]
 ;  Базированная адресация
         mov  al,[bx]+3
         mov  cx,3[bx]
 ;  Индексная адресация
         mov  di,ind
         mov  al,vec2[di]
-        ;mov  cx,vec2[di] -> lab2.asm(61): warning A4031: Operand types must match ->
-        	;Размеры операндов не совпадают, CX - регистр размера 2 байт, vec2[di] - ячейка памяти размера 1 байт
+        mov  cx,vec2[di]
 ;  Адресация с базированием и индексированием
         mov  bx,3
         mov  al,matr[bx][di]
-        ;mov  cx,matr[bx][di] lab2.asm(65): warning A4031: Operand types must match ->
-        	;Размеры операндов не совпадают, CX - регистр размера 2 байт, matr[bx*4][di] - ячейка памяти размера 1 байт
-        ;mov  ax,matr[bx*4][di] lab2.asm(66): error A2055: Illegal register value ->
-        	;Недопустимое значение регистра, попытка расширения 16-разрядного регистра
+        mov  cx,matr[bx][di]
+        mov  ax,matr[bx*4][di]
 
 ;  ПРОВЕРКА РЕЖИМОВ АДРЕСАЦИИ С УЧЕТОМ СЕГМЕНТОВ
 ;  Переопределение сегмента
@@ -87,10 +82,8 @@ Main      PROC  FAR
         mov  es:[bx+di],ax
 ;  ------ вариант 4
         mov  bp,sp
-        ;mov  ax,matr[bp+bx] lab2.asm(86): error A2046: Multiple base registers -> 
-        	;Попытка использовать несколько базовых регистров одновременно
-        ;mov  ax,matr[bp+di+si] lab2.asm(87): error A2047: Multiple index registers ->
-        	;Попытка использовать несколько индексных регистров одновременно
+        mov  ax,matr[bp+bx]
+        mov  ax,matr[bp+di+si]
 ;  Использование сегмента стека
         push  mem1
         push  mem2
