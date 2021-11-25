@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler Version 5.10                  11/24/21 22:31:3
+Microsoft (R) Macro Assembler Version 5.10                  11/25/21 08:41:0
                                                              Page     1-1
 
 
@@ -56,7 +56,7 @@
  000A  0000			i2	DW 	0
  000C				DATA	ENDS
 				
-Microsoft (R) Macro Assembler Version 5.10                  11/24/21 22:31:3
+Microsoft (R) Macro Assembler Version 5.10                  11/25/21 08:41:0
                                                              Page     1-2
 
 
@@ -114,7 +114,7 @@
  0032  8B C1					MOV AX, CX		;AX = -
 				3i
  0034  05 000C					ADD AX, 12
-Microsoft (R) Macro Assembler Version 5.10                  11/24/21 22:31:3
+Microsoft (R) Macro Assembler Version 5.10                  11/25/21 08:41:0
                                                              Page     1-3
 
 
@@ -134,24 +134,24 @@
  004E  8B 0E 000A R			MOV CX, i2	;i2 is min in CX
  0052  A1 0008 R			MOV AX, i1	;i1 is max in AX
  0055						other:
- 0055  8B 0E 0008 R				MOV CX, i1
- 0059  A1 000A R				MOV AX, i2
+						;MOV CX, i1
+						;MOV AX, i2
 						
- 005C  8B 1E 0006 R			MOV BX, k
- 0060  83 FB 00				CMP BX, 0 
- 0063  74 05				JZ fin	;JumpZero check if ZF = 0, if k
+ 0055  8B 1E 0006 R			MOV BX, k
+ 0059  83 FB 00				CMP BX, 0 
+ 005C  74 05				JZ fin	;JumpZero check if ZF = 0, if k
 				 /= 0 continue here, otherwise jump
- 0065  8B C8				MOV CX, AX 	;get max into CX
+ 005E  8B C8				MOV CX, AX 	;get max into CX
 					
- 0067  EB 01 90				jmp fin	; CX has min by default, if k =
+ 0060  EB 01 90				jmp fin	; CX has min by default, if k =
 				= 0 then res = min
 							;CX NOW HAS RESULT
 							
- 006A  CB				fin: RET		;return to DOS
- 006B				Main	ENDP
- 006B				CODE ENDS
+ 0063  CB				fin: RET		;return to DOS
+ 0064				Main	ENDP
+ 0064				CODE ENDS
 				END Main
-Microsoft (R) Macro Assembler Version 5.10                  11/24/21 22:31:3
+Microsoft (R) Macro Assembler Version 5.10                  11/25/21 08:41:0
                                                              Symbols-1
 
 
@@ -160,7 +160,7 @@ Segments and Groups:
                 N a m e         	Length	 Align	Combine Class
 
 ASTACK . . . . . . . . . . . . .  	0018	PARA	STACK	
-CODE . . . . . . . . . . . . . .  	006B	PARA	NONE	
+CODE . . . . . . . . . . . . . .  	0064	PARA	NONE	
 DATA . . . . . . . . . . . . . .  	000C	PARA	NONE	
 
 Symbols:            
@@ -173,7 +173,7 @@ B  . . . . . . . . . . . . . . .  	L WORD	0002	DATA
 
 F12SAVE  . . . . . . . . . . . .  	L NEAR	003D	CODE
 F1SEC  . . . . . . . . . . . . .  	L NEAR	002C	CODE
-FIN  . . . . . . . . . . . . . .  	L NEAR	006A	CODE
+FIN  . . . . . . . . . . . . . .  	L NEAR	0063	CODE
 
 I  . . . . . . . . . . . . . . .  	L WORD	0004	DATA
 I1 . . . . . . . . . . . . . . .  	L WORD	0008	DATA
@@ -181,7 +181,7 @@ I2 . . . . . . . . . . . . . . .  	L WORD	000A	DATA
 
 K  . . . . . . . . . . . . . . .  	L WORD	0006	DATA
 
-MAIN . . . . . . . . . . . . . .  	F PROC	0000	CODE	Length = 006B
+MAIN . . . . . . . . . . . . . .  	F PROC	0000	CODE	Length = 0064
 
 OTHER  . . . . . . . . . . . . .  	L NEAR	0055	CODE
 

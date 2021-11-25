@@ -87,8 +87,8 @@ MOV DS, AX			;DATA into DS
 	MOV CX, i2	;i2 is min in CX
 	MOV AX, i1	;i1 is max in AX
 		other:
-		MOV CX, i1
-		MOV AX, i2
+		;MOV CX, i1
+		;MOV AX, i2
 		
 	MOV BX, k
 	CMP BX, 0 
