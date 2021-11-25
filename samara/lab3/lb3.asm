@@ -11,6 +11,7 @@ i      DW    3
 k      DW    4
 i1     DW    0
 i2     DW    0
+temp   DW	 0
 
 DATA      ENDS
 
@@ -27,58 +28,58 @@ Main      PROC  FAR
       mov   DS,AX
 	  mov   CX, 0
 	  
-		;вычисление f2
+		;вычисление f2 и f8
 	  mov cx, i		
 	  mov ax, cx
 	  shl cx, 1
 	  shl cx, 1
+	  mov temp, cx	;4i
 	  mov bx, b
 	  cmp a, bx    ; сравнение a и b
-	  jle f2second		
+	  jle fsecond		
 		add cx, 3	;a > b
 		neg cx
-		jmp f2final
-	  f2second:		;a <= b
+		mov i1, cx
+		mov cx, temp
 		add cx, ax
-		add cx, ax
-		add cx, -10
-	  f2final:
-	  mov i1, cx
-	  
-		;вычисление f8
-      mov cx, i
-      mov ax, cx
-      cmp a, bx
-      jle f8second  
-        shl cx, 1	; a > bx
-		mov ax, cx
-		shl cx, 1
 		add cx, ax
 		add cx, 8
         neg cx
-        jmp f8final
-      f8second:  ; a <= bx
-        add cx, -1
+		mov i2, cx
+	  fsecond:		;a <= b
+		add cx, ax
+		add cx, ax
+		add cx, -10
+		mov i1, cx
+		mov cx, i
+		add cx, -1
         mov ax, cx
 		shl cx, 1
 		add cx, ax
         neg cx
         add cx, 9
-      f8final:
-      mov i2, cx   
+		mov i2, cx  
 
 		;вычисление f3
 	  mov bx, k
 	  cmp bx, 0
 	  je f3Second ; k != 0
-        mov bx, i1
-		cmp bx, i2
+		cmp cx, i1
         jle min1
-          mov cx, i2        ; i2 <= i1
+          mov cx, i1        ; i2 <= i1
 		  jmp MainFinal
 		min1:
-		  mov cx, bx       ; i2 > i1
 		  jmp MainFinal
+        
 	  f3Second:  ; k = 0
-        mov cx, i1
-  
+        add cx, i1
+	    cmp cx, 0
+	    jge MainFinal     ; |i1 + i2|
+	      neg cx
+		  jmp MainFinal
+		
+	  MainFinal:   ; в cx лежит значение функции f3
+      ret
+Main      ENDP
+CODE      ENDS
+END Main 
