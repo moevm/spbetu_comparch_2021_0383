@@ -33,8 +33,8 @@ int main() {
 		MOV ESI, OFFSET s					; put start of the s string into ESI
 		MOV EDI, OFFSET outstr				; put start of the outsrt into EDI
 
-		Lp :								; loop start
 		MOV ECX, '\0'
+		Lp :								; loop start
 			CMP ECX, [ESI]					; check if EOL is reached
 			JE stop							; if so - exit
 
