@@ -34,40 +34,34 @@ Main 	PROC 	FAR
 		;a>b
 		;i1
 		neg ax
-		mov cx, 3
-		neg cx
-		add cx, ax
+        sub ax, 3
+        mov cx, ax
 		mov i1, cx
+        ; cx = -4i - 3
 		;i2
-		mov cx, i
-		shl cx, 1
-		neg cx
-		add ax, cx
-		mov i2, ax
-		mov cx, 8
-		neg cx
-		add cx, ax
+        mov ax, i
+        shl ax, 1
+        sub cx, ax
+        sub cx, 5
 		mov i2, cx
 		
 		jmp f1end
-
+        ; cx = -6i - 8
 	f1:	;a<=b
-		;i1
-		mov cx, i
-		shl cx, 1
-		add ax, cx
-		mov cx, 10
-		neg cx
-		add cx, ax
+        ;i1
+        add cx, 8
+        neg cx
+        sub cx, 10
+        ;cx = 6i - 10 
+        ;ax = 2i
 		mov i1, cx
 		;i2
-		mov cx, i
-		shl cx, 1
-		add cx, i
-		neg cx
-		add cx, 12
+		add ax, i
+        neg ax
+        mov cx, ax
+        add cx, 12
 		mov i2, cx
-		
+				
 	f1end:
 		mov bx, i2
 		cmp k, 0
@@ -84,14 +78,14 @@ Main 	PROC 	FAR
 				jmp AllEnd	
 
 		f2: ;k==0
-			mov ax, i1
-			add ax, i2
-			cmp ax, 0
+			add bx, i1
+			cmp bx, 0
 			jle f4
 				; i1+i2 > 0					
 				jmp AllEnd
 			f4: ;i1+i2 <= 0					
-				neg ax
+				neg bx
+                mov ax, bx
 			
 
 	AllEnd:
@@ -102,53 +96,3 @@ CODE ENDS
 END Main
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-		
-	
-	f1end:
