@@ -8,10 +8,9 @@ DATA      SEGMENT
 a      DW    1
 b      DW    2
 i      DW    3
-k      DW    4
+k      DW    0
 i1     DW    0
 i2     DW    0
-temp   DW	 0
 
 DATA      ENDS
 
@@ -31,48 +30,53 @@ Main      PROC  FAR
 		;вычисление f2 и f8
 	  mov cx, i		
 	  mov ax, cx
-	  shl cx, 1
-	  shl cx, 1
-	  mov temp, cx	;4i
 	  mov bx, b
 	  cmp a, bx    ; сравнение a и b
-	  jle fsecond		
-		add cx, 3	;a > b
+	  jle fsecond	;a > b
+		shl cx, 1
+		shl cx, 1
+		add cx, 3
 		neg cx
 		mov i1, cx
-		mov cx, temp
-		add cx, ax
-		add cx, ax
-		add cx, 8
-        neg cx
+		sub cx, ax
+		sub cx, ax
+		add cx, -5
 		mov i2, cx
+		jmp finfun
 	  fsecond:		;a <= b
-		add cx, ax
-		add cx, ax
-		add cx, -10
-		mov i1, cx
-		mov cx, i
-		add cx, -1
-        mov ax, cx
 		shl cx, 1
 		add cx, ax
-        neg cx
-        add cx, 9
-		mov i2, cx  
-
+		neg cx
+		add cx, 12
+		mov i2, cx
+		shl cx, 1
+		neg cx
+		add cx, 14
+		mov i1, cx 
+		mov cx, i2
+		
+	finfun:
 		;вычисление f3
-	  mov bx, k
-	  cmp bx, 0
-	  je f3Second ; k != 0
+		;mov cx, i2
+		mov bx, k
+		cmp bx, 0
+		je f3Second ; k != 0
 		cmp cx, i1
-        jle min1
-          mov cx, i1        ; i2 <= i1
-		  jmp MainFinal
-		min1:
-		  jmp MainFinal
-        
-	  f3Second:  ; k = 0
-        add cx, i1
-	    cmp cx, 0
+		jle min1
+		mov cx, i1        ; i2 <= i1
+		jmp MainFinal
+	min1:
+		jmp MainFinal
+
+	f3Second:  ; k = 0
+		add cx, i1
+		cmp cx, 0
 	    jge MainFinal     ; |i1 + i2|
-	      neg cx
+	    neg cx
+		jmp MainFinal
+		
+	  MainFinal:   ; в cx лежит значение функции f3
+      ret
+Main      ENDP
+CODE      ENDS
+END Main 
