@@ -27,7 +27,7 @@ Main 	PROC 	FAR
 	mov cx, i
 	shl cx, 1
 	shl cx, 1
-	mov ax, cx
+	mov ax, cx; ax = cx = 4i
 	mov bx, b 
 	cmp a, bx
 	jle f1
@@ -44,24 +44,23 @@ Main 	PROC 	FAR
         sub cx, ax
         sub cx, 5
 		mov i2, cx
-		
 		jmp f1end
-        ; cx = -6i - 8
 	f1:	;a<=b
-        ;i1
-        add cx, 8
-        neg cx
-        sub cx, 10
-        ;cx = 6i - 10 
-        ;ax = 2i
-		mov i1, cx
-		;i2
-		add ax, i
+        ;i2
+		sub ax, i
         neg ax
         mov cx, ax
         add cx, 12
 		mov i2, cx
-				
+        ;i1
+        neg ax
+        shl ax, 1
+        mov cx, ax
+        sub cx, 10
+        ;cx = 6i - 10 
+        ;ax = 2i
+		mov i1, cx
+						
 	f1end:
 		mov bx, i2
 		cmp k, 0
@@ -82,12 +81,11 @@ Main 	PROC 	FAR
 			cmp bx, 0
 			jle f4
 				; i1+i2 > 0					
+                mov ax, bx
 				jmp AllEnd
 			f4: ;i1+i2 <= 0					
 				neg bx
                 mov ax, bx
-			
-
 	AllEnd:
 		mov res, ax
 		ret
