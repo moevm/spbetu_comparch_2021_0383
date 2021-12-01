@@ -1,0 +1,265 @@
+Microsoft (R) Macro Assembler Version 5.10                  12/2/21 01:30:06
+                                                             Page     1-1
+
+
+				;Create your own interruption
+				;interruption = proc with certain functions
+				;By the end of the program make sure to return 
+				original vectors of interruptions
+				;VAR 26 - 4e: 16h - interrupr from keyboard(by 
+				pressing a key do E: read and input to screen r
+				eal-time clock counting from memory CMOS(in BCD
+				 format)
+				;!should use more than 1Kb for stack
+						;PROG:
+				
+				ASSUME CS:CODE, DS:DATA, SS:STACK
+				
+ 0000				STACK SEGMENT STACK
+ 0000  0400[				DW 1024 DUP(?)		;Declare an arr
+				ay of 1024 unitialized Words (2 bytes) for stac
+				k
+	   ????			
+			 ]	
+				
+ 0800				STACK ENDS
+				
+ 0000				DATA	SEGMENT
+ 0000  0000				KEEP_CS DW 0 		;to store segme
+				nt
+ 0002  0000				KEEP_IP DW 0 		;to store inter
+				ruption vector shift
+ 0004				DATA	ENDS
+				
+ 0000				CODE	SEGMENT
+				
+ 0000				SUBR_INT PROC FAR		;port 70h is fo
+				r input(stores addr) use it to get CMOS registe
+				rs, port 71h - to read from them - if not using
+				 INT 1Ah
+ 0000  EB 6C 90				JMP start
+ 0003  0000				ORIG_SS DW 0
+ 0005  0000				ORIG_SP DW 0
+ 0007  0000				ORIG_AX DW 0
+ 0009  0028[				INT_STACK DB 40 DUP(?)
+	   ??			
+			 ]	
+				
+					
+ 0031					read_CMOS PROC
+ 0031  52					PUSH DX
+							;hours
+ 0032  8A C5					MOV AL, CH		;in CX=
+				HHMM,
+ 0034  E8 0050 R				CALL print_bcd
+ 0037  E8 0049 R				CALL colon
+							;minutes
+ 003A  8A C1					MOV AL, CL
+ 003C  E8 0050 R				CALL print_bcd
+Microsoft (R) Macro Assembler Version 5.10                  12/2/21 01:30:06
+                                                             Page     1-2
+
+
+ 003F  E8 0049 R				CALL colon
+							;seconds
+ 0042  8A C6					MOV AL, DH
+ 0044  E8 0050 R				CALL print_bcd
+ 0047  5A					POP DX
+ 0048  C3					RET	
+ 0049					read_CMOS ENDP
+					
+ 0049					colon PROC
+ 0049  B2 3A					MOV DL, ':'
+ 004B  B4 02					MOV AH, 02h
+ 004D  CD 21					INT 21H		
+ 004F  C3					RET
+ 0050					colon ENDP
+						
+ 0050					print_bcd PROC
+ 0050  52					PUSH DX		;save initial r
+				egisters
+ 0051  51					PUSH CX
+ 0052  B1 04					MOV CL, 4
+ 0054  8A E0					MOV AH, AL		;now al
+				 = 43 = ah
+ 0056  24 0F					AND AL, 00001111b	;now al
+				 = 03 (as it is in BCD, each digit is xxxxb)
+ 0058  D2 EC					SHR AH, CL		;now ah
+				 = 04 => ax = 0403
+ 005A  04 30					ADD AL, '0'		;get AS
+				CII value of '0' + shift in AL
+ 005C  80 C4 30					ADD AH, '0'
+ 005F  8A D4					MOV DL, AH
+ 0061  8A F0					MOV DH, AL
+ 0063  B4 02					MOV AH, 02h
+ 0065  CD 21					INT 21h
+ 0067  8A D6					MOV DL, DH
+ 0069  CD 21					INT 21h
+ 006B  59					POP CX			;return
+				 initial values
+ 006C  5A					POP DX
+ 006D  C3					RET
+ 006E					print_bcd ENDP
+					
+ 006E				start:	
+ 006E  2E: 89 26 0005 R			MOV ORIG_SP, SP
+ 0073  2E: A3 0007 R			MOV ORIG_AX, AX
+ 0077  8C D0				MOV AX, SS
+ 0079  2E: A3 0003 R			MOV ORIG_SS, AX
+ 007D  2E: A1 0007 R			MOV AX, ORIG_AX
+ 0081  BC 006E R			MOV SP, OFFSET start
+ 0084  8E D0				MOV SS, AX
+					
+				
+ 0086  50			    	PUSH AX    ;save original registers
+ 0087  52			    	PUSH DX
+				;-------------------------------------------<pr
+Microsoft (R) Macro Assembler Version 5.10                  12/2/21 01:30:06
+                                                             Page     1-3
+
+
+				ocess the interrupt>
+ 0088  B4 02				MOV AH, 02H		;read time from
+				 CMOS
+ 008A  CD 1A				INT 1Ah		;returns CX:DX = clock 
+				count
+ 008C  E8 0031 R			CALL read_CMOS
+					
+ 008F  5A				POP DX			;restore regist
+				ers
+ 0090  58				POP AX
+ 0091  2E: A3 0007 R			MOV ORIG_AX, AX
+ 0095  2E: 8B 26 0005 R			MOV SP, ORIG_SP
+ 009A  2E: A1 0003 R			MOV AX, ORIG_SS
+ 009E  8E D0				MOV SS, AX
+ 00A0  2E: A1 0007 R			MOV AX, ORIG_AX
+					
+ 00A4  B0 20				MOV AL, 20H		;these lines al
+				low to process lower level 
+ 00A6  E6 20				OUT 20H, AL 		;interrupts tha
+				n those we worked with
+ 00A8  CF				IRET			;exit from iter
+				rupt
+ 00A9				SUBR_INT ENDP
+				
+				
+ 00A9				Main	PROC FAR
+ 00A9  1E				PUSH DS
+ 00AA  2B C0				SUB AX, AX
+ 00AC  50				PUSH AX
+ 00AD  B8 ---- R			MOV AX, DATA		;DataSegment in
+				itialization
+ 00B0  8E D8				MOV DS, AX
+				;-----------save current vector-
+ 00B2  B4 35				MOV AH, 35H 		;get curr vecto
+				r
+ 00B4  B0 60				MOV AL, 60H		;get curr vecto
+				r number
+ 00B6  CD 21				INT 21H
+ 00B8  89 1E 0002 R			MOV KEEP_IP, BX	;store the shift
+ 00BC  8C 06 0000 R			MOV KEEP_CS, ES 	;store interrup
+				tion vector segment
+				
+				;-----------install new interrupt vector-
+ 00C0  1E				PUSH DS
+ 00C1  BA 0000 R			MOV DX, OFFSET SUBR_INT	;shift fot the 
+				proc into DX
+ 00C4  B8 ---- R			MOV AX, SEG SUBR_INT	;procedure segm
+				ent we save and
+ 00C7  8E D8				MOV DS, AX		;put into DS
+ 00C9  B4 25				MOV AH, 25H		;funtion to ins
+				tall new vector, it stores
+								;segment and sh
+				ift addresses into interrupt
+								;vector with ch
+Microsoft (R) Macro Assembler Version 5.10                  12/2/21 01:30:06
+                                                             Page     1-4
+
+
+				osen number.
+ 00CB  B0 60				MOV AL, 60H		;new vector num
+				ber
+ 00CD  CD 21				INT 21H		;change the interrupt
+ 00CF  1F				POP DS
+					
+				;-----------get key scan-code-(let`s it be 'Q')
+ 00D0					readkey:
+ 00D0  B4 00					MOV AH, 0		;by pre
+				ssing key in AH a BIOS scancode is stored, and 
+				in AL - an ASCII symbol
+ 00D2  CD 16					INT 16H		;interrupt to g
+				et the key scancode
+ 00D4  80 FC 10					CMP AH, 16		;16 is 
+				a scancode of 'Q'
+ 00D7  75 F7					JNE readkey		;if it`
+				s not 'Q' -> repeat reading, else continue
+						
+ 00D9  CD 60					INT 60H		;call changed i
+				nterrupt
+				
+				;-----------restore original interrupt vector-
+ 00DB  FA				CLI
+ 00DC  1E				PUSH DS
+ 00DD  8B 16 0002 R			MOV DX, KEEP_IP
+ 00E1  A1 0000 R			MOV AX, KEEP_CS
+ 00E4  8E D8				MOV DS, AX
+ 00E6  B4 25				MOV AH, 25H
+ 00E8  B0 60				MOV AL, 60H
+ 00EA  CD 21				INT 21H		;restore vector
+ 00EC  1F				POP DS
+ 00ED  FB				STI
+ 00EE  B4 4C				MOV AH, 4CH
+ 00F0  CD 21			   	INT 21H
+ 00F2				Main ENDP
+ 00F2				CODE ENDS
+				END Main
+Microsoft (R) Macro Assembler Version 5.10                  12/2/21 01:30:06
+                                                             Symbols-1
+
+
+Segments and Groups:
+
+                N a m e         	Length	 Align	Combine Class
+
+CODE . . . . . . . . . . . . . .  	00F2	PARA	NONE	
+DATA . . . . . . . . . . . . . .  	0004	PARA	NONE	
+STACK  . . . . . . . . . . . . .  	0800	PARA	STACK	
+
+Symbols:            
+
+                N a m e         	Type	 Value	 Attr
+
+COLON  . . . . . . . . . . . . .  	N PROC	0049	CODE	Length = 0007
+
+INT_STACK  . . . . . . . . . . .  	L BYTE	0009	CODE	Length = 0028
+
+KEEP_CS  . . . . . . . . . . . .  	L WORD	0000	DATA
+KEEP_IP  . . . . . . . . . . . .  	L WORD	0002	DATA
+
+MAIN . . . . . . . . . . . . . .  	F PROC	00A9	CODE	Length = 0049
+
+ORIG_AX  . . . . . . . . . . . .  	L WORD	0007	CODE
+ORIG_SP  . . . . . . . . . . . .  	L WORD	0005	CODE
+ORIG_SS  . . . . . . . . . . . .  	L WORD	0003	CODE
+
+PRINT_BCD  . . . . . . . . . . .  	N PROC	0050	CODE	Length = 001E
+
+READKEY  . . . . . . . . . . . .  	L NEAR	00D0	CODE
+READ_CMOS  . . . . . . . . . . .  	N PROC	0031	CODE	Length = 0018
+
+START  . . . . . . . . . . . . .  	L NEAR	006E	CODE
+SUBR_INT . . . . . . . . . . . .  	F PROC	0000	CODE	Length = 00A9
+
+@CPU . . . . . . . . . . . . . .  	TEXT  0101h		
+@FILENAME  . . . . . . . . . . .  	TEXT  lab5		
+@VERSION . . . . . . . . . . . .  	TEXT  510		
+
+
+    152 Source  Lines
+    152 Total   Lines
+     21 Symbols
+
+  48004 + 455158 Bytes symbol space free
+
+      0 Warning Errors
+      0 Severe  Errors
