@@ -76,10 +76,3 @@ Main      PROC  FAR
 	    cmp cx, 0
 	    jge MainFinal     ; |i1 + i2|
 	      neg cx
-		  jmp MainFinal
-		
-	  MainFinal:   ; в cx лежит значение функции f3
-      ret
-Main      ENDP
-CODE      ENDS
-END Main 

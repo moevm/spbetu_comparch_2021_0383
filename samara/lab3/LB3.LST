@@ -130,16 +130,7 @@ MIN1 . . . . . . . . . . . . . .  	L NEAR	0075	CODE
 
 TEMP . . . . . . . . . . . . . .  	L WORD	000C	DATA
 
-@CPU . . . . . . . . . . . . . .  	TEXT  0101h		
-@FILENAME  . . . . . . . . . . .  	TEXT  lb3		
-@VERSION . . . . . . . . . . . .  	TEXT  510		
-
-
-     85 Source  Lines
-     85 Total   Lines
-     20 Symbols
-
-  47992 + 461315 Bytes symbol space free
+@CPU . . . . . . .7992 + 461315 Bytes symbol space free
 
       0 Warning Errors
       0 Severe  Errors
