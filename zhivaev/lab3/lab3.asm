@@ -12,7 +12,7 @@ DATA SEGMENT
     i1    DW 0
     i2    DW 0
     res   DW 0
-    temp  DW 0
+
 
 DATA      ENDS
 
@@ -28,20 +28,21 @@ Main PROC  FAR
     mov    ax, DATA
     mov    ds, ax
     
+    mov    ax, i ; ax = i
+    shl    ax, 1 ; ax = 2i
+
     mov    bx, b
     cmp    a, bx
     jle    less_equal
          
     ; a > b
     ; f1
-    mov    ax, i
-    shl    ax, 1
     mov    cx, 15
     sub    cx, ax
     mov    i1, cx
 
     ; f3
-    shl    ax, 1
+    shl    ax, 1 ; ax = 4i
     mov    cx, 7
     sub    cx, ax
     mov    i2, cx
@@ -51,16 +52,13 @@ Main PROC  FAR
     ; a <= b
     less_equal:
     ; f1
-    mov    cx, i
-    shl    cx, 1
-    add    cx, i
-    mov    temp, cx ; temp = 3i
+    add    ax, 1 ; ax = 3i
+    mov    cx, ax
     add    cx, 4
     mov    i1, cx
 
     ; f3
-    mov    ax, temp
-    shl    ax, 1
+    shl    ax, 1 ; ax = 6i
     mov    cx, 8
     sub    cx, ax
     mov    i2, cx
@@ -102,4 +100,3 @@ Main PROC  FAR
 Main ENDP
 CODE      ENDS
 END Main 
-
