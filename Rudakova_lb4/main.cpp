@@ -21,33 +21,33 @@ int main() {
         mov al, 'a'
         dec al
         cycle ://перебор букв алфавита
-            mov edi, offset input     //устанавливаем в edi смещение на входную строку
+        mov edi, offset input     //устанавливаем в edi смещение на входную строку
             mov ecx, len
             cmp al, 'Z'
             je label
-            inc al 
-        label ://поиск в строке
-            inc num
+            inc al
+            label ://поиск в строке
+        inc num
             repne scasb        //посимвольный поиск во входной строке, он повторится такое количество раз, сколько во входной строке символов
-        has_symbol_check ://проверка символа
-            cmp ecx, 0   
+            has_symbol_check ://проверка символа
+        cmp ecx, 0
             jne get_index    //если символ встретился
             dec edi
             cmp ES : [edi] , al //проверка вдруг последний символ и есть искомый
             je get_index
             jmp last_iteration_check
-        get_index ://если символ встретился
-            mov ebx, len
+            get_index ://если символ встретился
+        mov ebx, len
             sub ebx, ecx //ebx теперь содержит индекс первого вхождения
             mov esi, num
             mov ES : arr[esi * 4], ebx   //положили в массив индекс первого вхождения
             jmp last_iteration_check
-        last_iteration_check ://вызов проверки следующего символа алфавита
-            cmp al, 'z'
+            last_iteration_check ://вызов проверки следующего символа алфавита
+        cmp al, 'z'
             je the_end
             jne cycle
 
-        the_end :
+            the_end :
     };
     int flag = 0;
     for (int i = 0; i < 26; i++) {
