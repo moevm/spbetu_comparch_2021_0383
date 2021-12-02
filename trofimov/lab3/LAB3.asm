@@ -53,7 +53,6 @@ Main      PROC  FAR
       ;вычисление f7
       mov cx, i
       mov ax, cx
-      cmp a, bx
       jle f7second  ; a > bx
       shl cx, 1
       shl cx, 1;4i
