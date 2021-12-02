@@ -1,7 +1,7 @@
 ;Create your own interruption
-;interruption = proc with certain functions
-;By the end of the program make sure to return original vectors of interruptions
-;VAR 26 - 4e: 16h - interrupr from keyboard(by pressing a key do E: read and input to screen real-time clock counting from memory CMOS(in BCD format)
+;interrupt = proc with certain functions
+;By the end of the program make sure to return original vectors of interrupts
+;VAR 26 - 4e: 16h - interrupt from keyboard(by pressing a key do E: read and input to screen real-time clock counting from memory CMOS(in BCD format)
 ;!should use more than 1Kb for stack
 		;PROG:
 
@@ -18,12 +18,10 @@ DATA	ENDS
 
 CODE	SEGMENT
 
-SUBR_INT PROC FAR		;port 70h is for input(stores addr) use it to get CMOS registers, port 71h - to read from them - if not using INT 1Ah
+SUBR_INT PROC FAR		;port 70h is for input(stores addr) use it to get CMOS
+				;registers, port 71h - to read from them - if not using INT 1Ah
 	JMP start
-	ORIG_SS DW 0
-	ORIG_SP DW 0
-	ORIG_AX DW 0
-	INT_STACK DB 40 DUP(?)
+	INT_STACK DB 80 DUP(?)
 	
 	read_CMOS PROC
 		PUSH DX
@@ -36,7 +34,7 @@ SUBR_INT PROC FAR		;port 70h is for input(stores addr) use it to get CMOS regist
 		CALL print_bcd
 		CALL colon
 			;seconds
-		MOV AL, DH
+		MOV AL, DH		;in DH=SS
 		CALL print_bcd
 		POP DX
 		RET	
@@ -58,11 +56,11 @@ SUBR_INT PROC FAR		;port 70h is for input(stores addr) use it to get CMOS regist
 		SHR AH, CL		;now ah = 04 => ax = 0403
 		ADD AL, '0'		;get ASCII value of '0' + shift in AL
 		ADD AH, '0'
-		MOV DL, AH
+		MOV DL, AH		;handle print (DL = to print)
 		MOV DH, AL
 		MOV AH, 02h
 		INT 21h
-		MOV DL, DH
+		MOV DL, DH		;for some reason otherwise DL doesnt change
 		INT 21h
 		POP CX			;return initial values
 		POP DX
@@ -70,29 +68,24 @@ SUBR_INT PROC FAR		;port 70h is for input(stores addr) use it to get CMOS regist
 	print_bcd ENDP
 	
 start:	
-	MOV ORIG_SP, SP
-	MOV ORIG_AX, AX
-	MOV AX, SS
-	MOV ORIG_SS, AX
-	MOV AX, ORIG_AX
-	MOV SP, OFFSET start
-	MOV SS, AX
-	
-
-    	PUSH AX    ;save original registers
+;------------------------------<save original registers>	
+    	PUSH BP    	
+    	MOV BP, SP	;set up the base pointer to the stack storing the args for this proc
+    	PUSH AX
+    	PUSH CX
     	PUSH DX
-;-------------------------------------------<process the interrupt>
-	MOV AH, 02H		;read time from CMOS
+    	MOV AX, CS	;set up DS to point to the segment with data items
+    	MOV DS, AX	;here DS is also CS
+    	
+;------------------------------<process the interrupt>
+	MOV AH, 02H		;read real time from CMOS
 	INT 1Ah		;returns CX:DX = clock count
 	CALL read_CMOS
 	
 	POP DX			;restore registers
+	POP CX
 	POP AX
-	MOV ORIG_AX, AX
-	MOV SP, ORIG_SP
-	MOV AX, ORIG_SS
-	MOV SS, AX
-	MOV AX, ORIG_AX
+	POP BP	
 	
 	MOV AL, 20H		;these lines allow to process lower level 
 	OUT 20H, AL 		;interrupts than those we worked with
@@ -101,19 +94,19 @@ SUBR_INT ENDP
 
 
 Main	PROC FAR
-	PUSH DS
-	SUB AX, AX
-	PUSH AX
+	PUSH DS		;write into stack
+	SUB AX, AX		;write a 0
+	PUSH AX		;write ax into stack => stack initialzation
 	MOV AX, DATA		;DataSegment initialization
 	MOV DS, AX
-;-----------save current vector-
+;-----------<save current vector>
 	MOV AH, 35H 		;get curr vector
 	MOV AL, 60H		;get curr vector number
 	INT 21H
 	MOV KEEP_IP, BX	;store the shift
 	MOV KEEP_CS, ES 	;store interruption vector segment
 
-;-----------install new interrupt vector-
+;----------<install new interrupt vector>
 	PUSH DS
 	MOV DX, OFFSET SUBR_INT	;shift fot the proc into DX
 	MOV AX, SEG SUBR_INT	;procedure segment we save and
@@ -125,7 +118,7 @@ Main	PROC FAR
 	INT 21H		;change the interrupt
 	POP DS
 	
-;-----------get key scan-code-(let`s it be 'Q')
+;----------<get key scan-code-(let`s it be 'Q')>
 	readkey:
 		MOV AH, 0		;by pressing key in AH a BIOS scancode is stored, and in AL - an ASCII symbol
 		INT 16H		;interrupt to get the key scancode
@@ -135,16 +128,16 @@ Main	PROC FAR
 		INT 60H		;call changed interrupt
 
 ;-----------restore original interrupt vector-
-	CLI
-	PUSH DS
-	MOV DX, KEEP_IP
-	MOV AX, KEEP_CS
+	CLI				;disable interrupts
+	PUSH DS			;save ds
+	MOV DX, KEEP_IP		;restore original shift
+	MOV AX, KEEP_CS		;restore int vector segment
 	MOV DS, AX
-	MOV AH, 25H
-	MOV AL, 60H
-	INT 21H		;restore vector
+	MOV AH, 25H			;to set int vector
+	MOV AL, 60H			;vector num
+	INT 21H			;restore vector
 	POP DS
-	STI
+	STI				;enable interrupts
 	MOV AH, 4CH
    	INT 21H
 Main ENDP
