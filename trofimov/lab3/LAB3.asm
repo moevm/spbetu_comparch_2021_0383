@@ -33,36 +33,32 @@ Main      PROC  FAR
 	  ;вычисление f3
 	  mov cx, i
     shl cx, 1
-      mov ax, cx
-      mov bx, b
+    mov ax, cx
+    mov bx, b
 	  cmp a, bx
+    shl cx, 1;*4
+    mov bx, cx
 	  jle f3second  ; a > bx
-      shl cx, 1;*4
-      neg cx;-4i
+    neg cx;-4i
 		add cx, 7;7-4i
 		jmp f3result
 	  f3second:       ; a <= bx
-		mov ax, cx
-		shl cx, 1
-		add cx, ax;6i
-        neg cx;-6i
-        add cx, 8;8-6i
+		  add bx, ax;-6i
+      neg bx
+      add bx, 8;8-6i
+      mov cx, bx
 	  f3result:
 	    mov i1, cx
 	  
       ;вычисление f7
-      mov cx, i
-      mov ax, cx
+      mov cx, ax
       jle f7second  ; a > bx
-      shl cx, 1
       shl cx, 1;4i
-	  sub cx, 5;4i-5
+	    sub cx, 5;4i-5
       neg cx;-(4i-5)
       jmp f7result
       f7second:  ; a <= bx
-        mov ax,cx
-        shl cx, 1;2i
-        add cx, ax;3i
+        add cx, i;3i
         neg cx;-3i
         add cx, 10;10-3i
         
@@ -70,19 +66,18 @@ Main      PROC  FAR
       mov i2, cx   
 
 	  ;рассчет f5
-	  mov bx, k
-	  cmp bx, 0
+	  cmp k, 0
     mov ax, i1
 	  je f5second 
-        ; k != 0
+      ; k != 0
+      cmp ax, 0
+      jl negi
+        mov cx, ax
+        mov ax, i2
         cmp ax, 0
         jl negi
-          mov cx, ax
-          mov ax, i2
-          cmp ax, 0
-          jl negi
-            add cx, ax
-            jmp MainFinal
+          add cx, ax
+          jmp MainFinal
 
         ;модуль i
         negi: 
