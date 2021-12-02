@@ -32,17 +32,16 @@ Main      PROC  FAR
 	  	  
 	  ;вычисление f3
 	  mov cx, i
+    shl cx, 1
       mov ax, cx
       mov bx, b
 	  cmp a, bx
 	  jle f3second  ; a > bx
-        shl cx, 1
-        shl cx, 1;*4
-        neg cx;-4i
+      shl cx, 1;*4
+      neg cx;-4i
 		add cx, 7;7-4i
 		jmp f3result
 	  f3second:       ; a <= bx
-	    shl cx, 1
 		mov ax, cx
 		shl cx, 1
 		add cx, ax;6i
@@ -71,43 +70,36 @@ Main      PROC  FAR
       f7result:
       mov i2, cx   
 
-      
-	  
 	  ;рассчет f5
 	  mov bx, k
 	  cmp bx, 0
+    mov ax, i1
 	  je f5second 
         ; k != 0
-        cmp i1, 0
-        jl negi1
-          mov cx, i1
-          cmp i2, 0
-          jl negi2
-            add cx, i2
+        cmp ax, 0
+        jl negi
+          mov cx, ax
+          mov ax, i2
+          cmp ax, 0
+          jl negi
+            add cx, ax
             jmp MainFinal
 
-        ;модуль i1
-        negi1: 
-          neg i1
-        
-        ;модуль i2
-        negi2: 
-          neg i2
+        ;модуль i
+        negi: 
+          neg ax
 		
-        
-        
-	    
-	  f5second:  ; k = 0
-        cmp i1, 0
-        jl negi1
-          cmp i1, 6
+	    f5second:  ; k = 0
+        cmp ax, 0
+        jl negi
+          cmp ax, 6
           jle min1
             mov cx, 6 
             jmp MainFinal
-	    
             min1: 
-              mov cx, i1 
+              mov cx, ax
               jmp MainFinal
+	  
 		
 	  MainFinal:           ; в cx лежит значение функции f5
       ret
