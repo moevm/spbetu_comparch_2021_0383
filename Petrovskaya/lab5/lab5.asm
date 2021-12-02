@@ -22,6 +22,8 @@ SUBR_INT PROC FAR		;port 70h is for input(stores addr) use it to get CMOS
 				;registers, port 71h - to read from them - if not using INT 1Ah
 	JMP start
 	INT_STACK DB 80 DUP(?)
+	INIT_SS DW 0000h
+	INIT_SP DW 0000h
 	
 	read_CMOS PROC
 		PUSH DX
@@ -69,13 +71,16 @@ SUBR_INT PROC FAR		;port 70h is for input(stores addr) use it to get CMOS
 	
 start:	
 ;------------------------------<save original registers>	
-    	PUSH BP    	
-    	MOV BP, SP	;set up the base pointer to the stack storing the args for this proc
+	MOV INIT_SP, SP
+    	PUSH AX
+    	MOV AX, SS
+    	MOV INIT_SS, AX
+    	POP AX
+    	MOV SP, OFFSET start
+    	MOV SS, AX
     	PUSH AX
     	PUSH CX
     	PUSH DX
-    	MOV AX, CS	;set up DS to point to the segment with data items
-    	MOV DS, AX	;here DS is also CS
     	
 ;------------------------------<process the interrupt>
 	MOV AH, 02H		;read real time from CMOS
@@ -85,7 +90,11 @@ start:
 	POP DX			;restore registers
 	POP CX
 	POP AX
-	POP BP	
+    	MOV SP, INIT_SP
+    	PUSH AX
+    	MOV AX, INIT_SS
+    	MOV SS, AX
+    	POP AX
 	
 	MOV AL, 20H		;these lines allow to process lower level 
 	OUT 20H, AL 		;interrupts than those we worked with
