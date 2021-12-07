@@ -16,7 +16,7 @@ int main() {
 	printf("Введите строку: ");
 
 	while ((c = getchar()) != '\n') {
-		if ((c >= -64 && c <= -1) || c == -72 || c == -88)	//-72 == ё, -88 == Ё
+		//if ((c >= -64 && c <= -1) || c == -72 || c == -88)	//-72 == ё, -88 == Ё
 			str[i++] = c;
 	}
 	char* str1 = (char*)calloc(i * 3, sizeof(char));
@@ -28,9 +28,23 @@ int main() {
 		for:
 			lodsb // кладём байт из si в al
 			stosb // из al в di
-			mov c, 0 // счётчик первого вхождения встроку
+			mov c, 1 // счётчик первого вхождения встроку
 			mov edx, esi // адрес строки
 			mov bl, al // сохраняем текущий символ
+				
+			cmp bl, 'ё'
+			je russian
+			cmp bl, 'Ё'
+			je russian
+			cmp bl, 'А'
+			jl next
+			jge russian
+			cmp bl, 'я'
+			jg next
+			jle russian
+		next: 
+			loop for
+		russian:
 			mov esi, str //начало поиска с самого начала исходной строки
 			lodsb // считывание символа из str
 		while:
@@ -75,9 +89,27 @@ int main() {
 	int n = i;
 	FILE* fout;
 	fopen_s(&fout, "output.txt", "w");
-	for (int i = 0; i < 3 * n; i += 3){
-		fprintf(fout, "Символ строки: '%c', номер первого вхождения: %d, номер буквы в алфавите: %d.\n", str1[i], str1[i + 1], str1[i + 2]);
-		printf("Символ строки: '%c', номер первого вхождения: %d, номер буквы в алфавите: %d.\n", str1[i], str1[i + 1], str1[i + 2]);
+	int nmbr;
+	int already[33] = {0};
+	for (int i = 0; i < 3 * n; i += 3) {
+		if (((str1[i] < 0) && (str1[i] > -65) || str1[i] == -72 || str1[i] == -88)) {
+			if (str1[i] <= -33) {	//заглавные
+				if(str1[i] == -72)	//ё
+					nmbr = str1[i] + 80;
+				else if(str1[i] == -88)
+					nmbr = str1[i] + 96;
+				else
+					nmbr = str1[i] + 65;
+			}
+			else{
+				nmbr = str1[i] + 33;
+			}
+			if (already[nmbr] == 0) {
+				already[nmbr] = 1;
+				fprintf(fout, "Символ строки: '%c', номер первого вхождения: %d, номер буквы в алфавите: %d.\n", str1[i], str1[i + 1], str1[i + 2]);
+				printf("Символ строки: '%c', номер первого вхождения: %d, номер буквы в алфавите: %d.\n", str1[i], str1[i + 1], str1[i + 2]);
+			}
+		}
 	}
 	fclose(fout);
 	return 0;
