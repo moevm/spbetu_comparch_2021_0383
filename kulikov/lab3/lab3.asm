@@ -29,28 +29,27 @@ Main PROC FAR
 	mov i, 0
 	mov k, 0
 
+	;bx = 3 * i
+	mov bx, i
+	shl bx, 1
+	add bx, i
+
 	mov cx, a
-	sub cx, b
-	cmp cx, 0
+	cmp cx, b
 	jle L1
 
 	;a > b
 	;i1 = -(4 * i + 3)
-	mov cx, i
-	shl cx, 1
-	shl cx, 1
-	add cx, 3
+	add bx, i
+	add bx, 3
 	neg cx
-	mov i1, cx
+	mov i1, bx
 
 	;i2 = -(6 * i + 8)
-	mov cx, i
-	shl cx, 1
-	add cx, i
-	add cx, 4
-	shl cx, 1
-	neg cx
-	mov i2, cx
+	add bx, 4
+	shl bx, 1
+	neg bx
+	mov i2, bx
 
 	jmp L2
 
@@ -58,58 +57,37 @@ Main PROC FAR
 	;a <= b
 	L1:
 
-	;i1 = 6 * i - 10
-	mov cx, i
-	shl cx, 1
-	add cx, i
-	shl cx, 1
-	sub cx, 10
-	mov i1, cx
-
 	;i2 = 9 - 3 * (i - 1)
-	mov cx, i
-	shl cx, 1
-	add cx, i
-	neg cx
-	add cx, 12
-	mov i2, cx
+	neg bx
+	add bx, 12
+	mov i2, bx
+
+	;i1 = 6 * i - 10
+	neg bx
+	shl bx, 1
+	add bx, 2
+	mov i1, bx
 
 	L2:
 	cmp k, 0
 	jne L3
 
 	;k == 0
-	cmp i1, 0
-	jl i10
-	cmp i2, 0
-	jl i20
-	jmp endf3
-
-	i10:
-	neg i1
-	cmp i2, 0
-	jg endf3
-
-	i20:
-	neg i2
 	
-	endf3:
-	mov ax, i1
-	add ax, i2
+	mov AX, i1
+	add AX, i2
+	cmp AX, 0
+	jg endmain
+	neg AX
 	jmp endmain
 
 	;k != 0
 	L3:
-	mov cx, i1
-	sub cx, i2
-	cmp cx, 0
-	jl Li1
-	mov AX, i2
-	jmp endmain
+	mov Ax, i1
+	cmp AX, i2
+	jle endmain
 
-	Li1:
-	mov AX, i1
-	jmp endmain
+	mov AX, i2
 
 	endmain:
 	ret
