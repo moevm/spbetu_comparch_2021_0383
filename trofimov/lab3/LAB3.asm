@@ -34,22 +34,21 @@ Main      PROC  FAR
 	  mov cx, i
     shl cx, 1
     mov ax, cx
-    mov bx, b
-	  cmp a, bx
     shl cx, 1;*4
     mov bx, cx
+	  cmp a, b
 	  jle f3second  ; a > bx
     neg cx;-4i
-		add cx, 7;7-4i
+    mov i1, cx
+    add i1, 7
+		;add cx, 7;7-4i
 		jmp f3result
 	  f3second:       ; a <= bx
 		  add bx, ax;-6i
       neg bx
       add bx, 8;8-6i
-      mov cx, bx
+      mov i1, bx
 	  f3result:
-	    mov i1, cx
-	  
       ;вычисление f7
       mov cx, ax
       jle f7second  ; a > bx
@@ -66,22 +65,23 @@ Main      PROC  FAR
       mov i2, cx   
 
 	  ;рассчет f5
-	  cmp k, 0
     mov ax, i1
+	  cmp k, 0
 	  je f5second 
       ; k != 0
-      cmp ax, 0
-      jl negi
+      jmp negi
         mov cx, ax
         mov ax, i2
-        cmp ax, 0
-        jl negi
+        jmp negi
           add cx, ax
           jmp MainFinal
 
         ;модуль i
-        negi: 
-          neg ax
+        negi:
+          cmp ax, 0
+          jl negative
+            negative:
+              neg ax
 		
 	    f5second:  ; k = 0
         cmp ax, 0
