@@ -32,68 +32,61 @@ Main      PROC  FAR
 	  	  
 	  ;вычисление f3
 	  mov cx, i
-    shl cx, 1
-    mov ax, cx
+    shl cx, 1;*2
+    mov ax, cx;2i
     shl cx, 1;*4
     mov bx, cx
-	  cmp a, b
-	  jle f3second  ; a > bx
     neg cx;-4i
     mov i1, cx
-    add i1, 7
-		;add cx, 7;7-4i
+	  cmp a, b
+	  jle f3second  ; a > bx
+    add i1, 7;7-4i
 		jmp f3result
 	  f3second:       ; a <= bx
-		  add bx, ax;-6i
-      neg bx
-      add bx, 8;8-6i
-      mov i1, bx
+      sub i1, ax;-6i
+      add i1, 8;8-6i
 	  f3result:
       ;вычисление f7
-      mov cx, ax
       jle f7second  ; a > bx
-      shl cx, 1;4i
-	    sub cx, 5;4i-5
-      neg cx;-(4i-5)
+      add cx, 5;-4i+5
       jmp f7result
       f7second:  ; a <= bx
-        add cx, i;3i
-        neg cx;-3i
-        add cx, 10;10-3i
-        
-      f7result:
-      mov i2, cx   
-
-	  ;рассчет f5
-    mov ax, i1
-	  cmp k, 0
-	  je f5second 
-      ; k != 0
-      jmp negi
+        add ax, i;3i
+        neg ax;-3i
+        add ax, 10;10-3i
         mov cx, ax
-        mov ax, i2
-        jmp negi
-          add cx, ax
-          jmp MainFinal
-
-        ;модуль i
-        negi:
-          cmp ax, 0
-          jl negative
-            negative:
-              neg ax
-		
-	    f5second:  ; k = 0
-        cmp ax, 0
-        jl negi
-          cmp ax, 6
-          jle min1
-            mov cx, 6 
-            jmp MainFinal
-            min1: 
-              mov cx, ax
+      f7result:
+        ;рассчет f5  
+        mov i2, cx 
+        mov ax, i1
+        cmp k, 0
+        je f5second 
+          ; k != 0
+          jmp negi ;|i1|
+            mov cx, ax
+            mov ax, i2
+            jmp negi ;|i2|
+              add cx, ax
               jmp MainFinal
-	  
+
+            ;модуль i
+            negi:
+              cmp ax, 0
+              jl negative
+                negative:
+                  neg ax
+        
+          f5second:  ; k = 0
+            cmp ax, 0
+            jl negi
+              cmp ax, 6
+              jle min1
+                mov cx, 6 
+                jmp MainFinal
+                min1: 
+                  mov cx, ax
+                  jmp MainFinal
+        
 		
 	  MainFinal:           ; в cx лежит значение функции f5
       ret
