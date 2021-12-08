@@ -21,9 +21,10 @@ CODE	SEGMENT
 SUBR_INT PROC FAR		;port 70h is for input(stores addr) use it to get CMOS
 				;registers, port 71h - to read from them - if not using INT 1Ah
 	JMP start
-	INT_STACK DB 80 DUP(?)
+	
 	INIT_SS DW 0000h
 	INIT_SP DW 0000h
+	INT_STACK DB 40 DUP(?)
 	
 	read_CMOS PROC
 		PUSH DX
@@ -72,14 +73,11 @@ SUBR_INT PROC FAR		;port 70h is for input(stores addr) use it to get CMOS
 start:	
 ;------------------------------<save original registers>	
 	MOV INIT_SP, SP
-    	PUSH AX
-    	MOV AX, SS
-    	MOV INIT_SS, AX
-    	POP AX
-    	MOV SP, OFFSET start
-    	MOV SS, AX
-    	PUSH AX
-    	PUSH CX
+    	MOV INIT_SS, ss
+    	mov sp, SEG INT_STACK	;get the segment of the new stack top into SP
+    	mov ss, sp		;now SS == top addr of new stack segment
+    	PUSH AX		
+    	PUSH CX		
     	PUSH DX
     	
 ;------------------------------<process the interrupt>
@@ -90,12 +88,8 @@ start:
 	POP DX			;restore registers
 	POP CX
 	POP AX
+	MOV ss, INIT_SS
     	MOV SP, INIT_SP
-    	PUSH AX
-    	MOV AX, INIT_SS
-    	MOV SS, AX
-    	POP AX
-	
 	MOV AL, 20H		;these lines allow to process lower level 
 	OUT 20H, AL 		;interrupts than those we worked with
 	IRET			;exit from iterrupt
@@ -152,3 +146,4 @@ Main	PROC FAR
 Main ENDP
 CODE ENDS
 END Main
+
