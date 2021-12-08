@@ -29,46 +29,41 @@ Main      PROC  FAR
       mov   CX, 0
             
       mov cx, i
+      shl cx, 1 ; cx = 2i
       mov ax, cx
-      shl cx, 1
-      shl cx, 1 ; cx = 4i
-      mov T, cx ; T = 4i
-      sub T, ax
-      sub T, ax ; T = 2i
+      add ax, i ; ax = 3i
       mov bx, b
       cmp a, bx
       
       ; a>b
       jle f2f6
-        add cx, 3
-        neg cx
-        mov i1, cx
-        mov cx, T
         sub cx, 2
         mov i2, cx
+        shl cx, 1
+        neg cx
+        sub cx, 7
+        mov i1, cx
         jmp final
         
       ; a<=b
       f2f6:
-        mov cx, T
-        add cx, ax
-        sub cx, 5
-        mov T, cx
-        shl cx, 1
-        mov i1, cx
-        neg T
-        sub T, 3
-        mov cx, T
+        mov cx, ax
+        sub cx, 2
+        neg cx
         mov i2, cx
+        neg cx
+        shl cx, 1
+        sub cx, 6
+        mov i1, cx
       
       ; рассчет f5
       final:
-      mov bx, k
       mov ax, i1
       cmp ax, 0
       jge gr1
       neg ax
       gr1:
+      mov bx, k
       cmp bx, 0
       je f5second
       mov cx, i2
