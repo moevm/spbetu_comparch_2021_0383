@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler Version 5.10                  11/15/21 17:02:1
+Microsoft (R) Macro Assembler Version 5.10                  12/9/21 12:27:21
                                                              Page     1-1
 
 
@@ -8,9 +8,10 @@
 			 ]	
 				
  0018				AStack  ENDS
-				;Данные программы
+				;пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
  0000				DATA      SEGMENT
-				;Директивы описания данных
+				;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+				пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
  0000  0000			a      DW    0
  0002  0000			b      DW    0
  0004  0000			i      DW    0
@@ -20,11 +21,12 @@
 				
  000C				DATA      ENDS
 				
-				; Код программы
+				; пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
  0000				CODE      SEGMENT
 				      ASSUME CS:CODE, DS:DATA, SS:AStack
 				
-				; Головная процедура
+				; пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпї
+				ЅпїЅпїЅ
  0000				Main      PROC  FAR
  0000  1E			      push  DS
  0001  2B C0			      sub   AX,AX
@@ -38,13 +40,14 @@
  0018  C7 06 0004 R FFFE	      mov i, -2
  001E  C7 06 0006 R 0000	      mov k, 0
 					  
-					  ;вычисление f3
+					  ;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ f3
  0024  8B 0E 0004 R			  mov cx, i
  0028  D1 E1				  shl cx, 1
  002A  8B C1				  mov ax, cx
- 002C  D1 E1				  shl cx, 1
- 002E  8B 1E 0002 R			  mov bx, b    ;
- 0032  39 1E 0000 R			  cmp a, bx    ; сравнение a и b
+ 002C  D1 E1				  shl cx, 1 ; cx 4i ax 2i
+ 002E  8B 1E 0002 R			  mov bx, b    ; bx b
+ 0032  39 1E 0000 R			  cmp a, bx    ; пїЅпїЅпїЅпїЅпїЅпїЅпїЅп
+				їЅпїЅ a пїЅ b
  0036  7E 08				  jle f1second
  0038  F7 D9					neg cx
  003A  83 C1 07					add cx, 7
@@ -53,58 +56,49 @@
  0040  03 C8					add cx, ax
  0042  F7 D9					neg cx
  0044  83 C1 08					add cx, 8
- 0047					  f1final:
- 0047  89 0E 0008 R			  mov i1, cx
-					  
-Microsoft (R) Macro Assembler Version 5.10                  11/15/21 17:02:1
+Microsoft (R) Macro Assembler Version 5.10                  12/9/21 12:27:21
                                                              Page     1-2
 
 
-					  ;вычисление f5
- 004B  8B 0E 0004 R			  mov cx, i
- 004F  D1 E1				  shl cx, 1
- 0051  8B C1				  mov ax, cx
- 0053  D1 E1				  shl cx, 1
- 0055  39 1E 0000 R			  cmp a, bx
- 0059  7E 08				  jle f2second
- 005B  F7 D9					neg cx
- 005D  83 C1 14					add cx, 20
- 0060  EB 08 90					jmp f2final
- 0063					  f2second:       
- 0063  03 C8				    add cx, ax
- 0065  83 C1 FA					add cx, -6
- 0068  F7 D9					neg cx
- 006A					  f2final:
- 006A  89 0E 000A R			  mov i2, cx
+ 0047					  f1final:
+ 0047  89 0E 0008 R			  mov i1, cx
 					  
-					  ;рассчет res
- 006E  8B 1E 0006 R			  mov bx, k
- 0072  83 FB 00				  cmp bx, 0
- 0075  75 14				  jne resSecond
- 0077  8B 1E 0008 R			    mov bx, i1
- 007B  03 1E 000A R				add bx, i2
- 007F  83 FB 00					cmp bx, 0
- 0082  7D 02					jge skip
- 0084  F7 DB					neg bx
- 0086						skip:
- 0086  8B CB					mov cx, bx
- 0088  EB 17 90					  jmp MainFinal
- 008B					  resSecond:
- 008B  8B 1E 0008 R			    mov bx, i1
- 008F  3B 1E 000A R				cmp bx, i2
- 0093  7C 07					jl min
- 0095  8B 0E 000A R				  mov cx, i2
- 0099  EB 06 90					  jmp MainFinal
- 009C						min:
- 009C  8B CB					  mov cx, bx
- 009E  EB 01 90					  jmp MainFinal
- 00A1					  MainFinal:           ; в cx лежит зна
-				чение res
- 00A1  CB			      ret
- 00A2				Main      ENDP
- 00A2				CODE      ENDS
+					  ;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ f5
+ 004B  8B C8				  mov cx, ax
+ 004D  D1 E1				  shl cx, 1 ; cx 4i ax 2i bx b
+ 004F  39 1E 0000 R			  cmp a, bx
+ 0053  7E 08				  jle f2second
+ 0055  F7 D9					neg cx
+ 0057  83 C1 14					add cx, 20
+ 005A  EB 08 90					jmp f2final
+ 005D					  f2second:       
+ 005D  03 C8				    add cx, ax
+ 005F  83 C1 FA					add cx, -6
+ 0062  F7 D9					neg cx
+ 0064					  f2final:
+ 0064  89 0E 000A R			  mov i2, cx
+					  
+					  ;пїЅпїЅпїЅпїЅпїЅпїЅпїЅ res
+ 0068  8B 1E 0006 R			  mov bx, k
+ 006C  83 FB 00				  cmp bx, 0
+ 006F  75 0E				  jne resSecond
+ 0071  8B 0E 0008 R			    mov cx, i1 ; cx i1 + i2
+ 0075  83 F9 00					cmp cx, 0
+ 0078  7D 02					jge skip
+ 007A  F7 D9					neg cx
+ 007C						skip:
+ 007C  EB 0B 90					  jmp MainFinal
+ 007F					  resSecond:
+ 007F  3B 0E 0008 R				cmp cx, i1
+ 0083  7C 04					jl MainFinal
+ 0085  8B 0E 0008 R				  mov cx, i1
+ 0089					  MainFinal:           ; пїЅ cx пїЅпїЅп
+				їЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ res
+ 0089  CB			      ret
+ 008A				Main      ENDP
+ 008A				CODE      ENDS
 				END Main 
-Microsoft (R) Macro Assembler Version 5.10                  11/15/21 17:02:1
+Microsoft (R) Macro Assembler Version 5.10                  12/9/21 12:27:21
                                                              Symbols-1
 
 
@@ -113,7 +107,7 @@ Segments and Groups:
                 N a m e         	Length	 Align	Combine Class
 
 ASTACK . . . . . . . . . . . . .  	0018	PARA	STACK	
-CODE . . . . . . . . . . . . . .  	00A2	PARA	NONE	
+CODE . . . . . . . . . . . . . .  	008A	PARA	NONE	
 DATA . . . . . . . . . . . . . .  	000C	PARA	NONE	
 
 Symbols:            
@@ -126,8 +120,8 @@ B  . . . . . . . . . . . . . . .  	L WORD	0002	DATA
 
 F1FINAL  . . . . . . . . . . . .  	L NEAR	0047	CODE
 F1SECOND . . . . . . . . . . . .  	L NEAR	0040	CODE
-F2FINAL  . . . . . . . . . . . .  	L NEAR	006A	CODE
-F2SECOND . . . . . . . . . . . .  	L NEAR	0063	CODE
+F2FINAL  . . . . . . . . . . . .  	L NEAR	0064	CODE
+F2SECOND . . . . . . . . . . . .  	L NEAR	005D	CODE
 
 I  . . . . . . . . . . . . . . .  	L WORD	0004	DATA
 I1 . . . . . . . . . . . . . . .  	L WORD	0008	DATA
@@ -135,22 +129,21 @@ I2 . . . . . . . . . . . . . . .  	L WORD	000A	DATA
 
 K  . . . . . . . . . . . . . . .  	L WORD	0006	DATA
 
-MAIN . . . . . . . . . . . . . .  	F PROC	0000	CODE	Length = 00A2
-MAINFINAL  . . . . . . . . . . .  	L NEAR	00A1	CODE
-MIN  . . . . . . . . . . . . . .  	L NEAR	009C	CODE
+MAIN . . . . . . . . . . . . . .  	F PROC	0000	CODE	Length = 008A
+MAINFINAL  . . . . . . . . . . .  	L NEAR	0089	CODE
 
-RESSECOND  . . . . . . . . . . .  	L NEAR	008B	CODE
+RESSECOND  . . . . . . . . . . .  	L NEAR	007F	CODE
 
-SKIP . . . . . . . . . . . . . .  	L NEAR	0086	CODE
+SKIP . . . . . . . . . . . . . .  	L NEAR	007C	CODE
 
 @CPU . . . . . . . . . . . . . .  	TEXT  0101h		
-@FILENAME  . . . . . . . . . . .  	TEXT  LR3		
+@FILENAME  . . . . . . . . . . .  	TEXT  lr3		
 @VERSION . . . . . . . . . . . .  	TEXT  510		
 
 
-     94 Source  Lines
-     94 Total   Lines
-     23 Symbols
+     85 Source  Lines
+     85 Total   Lines
+     22 Symbols
 
   47996 + 461311 Bytes symbol space free
 

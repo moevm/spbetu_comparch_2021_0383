@@ -1,9 +1,9 @@
 AStack SEGMENT  STACK
     DW 12 DUP(?)
 AStack  ENDS
-;Данные программы
+;пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 DATA      SEGMENT
-;Директивы описания данных
+;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 a      DW    0
 b      DW    0
 i      DW    0
@@ -13,11 +13,11 @@ i2     DW    0
 
 DATA      ENDS
 
-; Код программы
+; пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 CODE      SEGMENT
       ASSUME CS:CODE, DS:DATA, SS:AStack
 
-; Головная процедура
+; пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 Main      PROC  FAR
       push  DS
       sub   AX,AX
@@ -31,13 +31,13 @@ Main      PROC  FAR
       mov i, -2
       mov k, 0
 	  
-	  ;вычисление f3
+	  ;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ f3
 	  mov cx, i
 	  shl cx, 1
 	  mov ax, cx
-	  shl cx, 1
-	  mov bx, b    ;
-	  cmp a, bx    ; сравнение a и b
+	  shl cx, 1 ; cx 4i ax 2i
+	  mov bx, b    ; bx b
+	  cmp a, bx    ; пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ a пїЅ b
 	  jle f1second
 		neg cx
 		add cx, 7
@@ -49,11 +49,9 @@ Main      PROC  FAR
 	  f1final:
 	  mov i1, cx
 	  
-	  ;вычисление f5
-	  mov cx, i
-	  shl cx, 1
-	  mov ax, cx
-	  shl cx, 1
+	  ;пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ f5
+	  mov cx, ax
+	  shl cx, 1 ; cx 4i ax 2i bx b
 	  cmp a, bx
 	  jle f2second
 		neg cx
@@ -66,28 +64,21 @@ Main      PROC  FAR
 	  f2final:
 	  mov i2, cx
 	  
-	  ;рассчет res
+	  ;пїЅпїЅпїЅпїЅпїЅпїЅпїЅ res
 	  mov bx, k
 	  cmp bx, 0
 	  jne resSecond
-	    mov bx, i1
-		add bx, i2
-		cmp bx, 0
+	    mov cx, i1 ; cx i1 + i2
+		cmp cx, 0
 		jge skip
-		neg bx
+		neg cx
 		skip:
-		mov cx, bx
 		  jmp MainFinal
 	  resSecond:
-	    mov bx, i1
-		cmp bx, i2
-		jl min
-		  mov cx, i2
-		  jmp MainFinal
-		min:
-		  mov cx, bx
-		  jmp MainFinal
-	  MainFinal:           ; в cx лежит значение res
+		cmp cx, i1
+		jl MainFinal
+		  mov cx, i1
+	  MainFinal:           ; пїЅ cx пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ res
       ret
 Main      ENDP
 CODE      ENDS
