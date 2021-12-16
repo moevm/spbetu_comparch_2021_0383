@@ -21,7 +21,7 @@ lp:
 	INC EBX 						;curr index + 1
 	MOV [ESI + 4 * EAX], EBX 		;put the result into the arr
 	ADD EDI, 4 						;next element
-	JMP lp 							;loop
+	LOOP lp 						;loop (decr the ECX value, if ECX > 0 -> loop)
 
 POP ESI
 POP EDI
