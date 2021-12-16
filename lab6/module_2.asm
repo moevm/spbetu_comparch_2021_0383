@@ -5,13 +5,14 @@
 .CODE
 PUBLIC C module_2
 
-module_2 PROC C x: dword, arr_size: dword, , xmin: dword, left_border: dword, interval_cnt: dword, result: dword
+module_2 PROC C x: dword, arr_size: dword, left_border: dword, interval_cnt: dword, result: dword
 
 PUSH EDI
 PUSH ESI
 PUSH EBX
 PUSH ECX
 PUSH EAX
+push ebp
 
 MOV ECX, arr_size		;get arr_size into ECX
 MOV ESI, x 				;get start of the x into ESI
@@ -26,15 +27,27 @@ lp_x:								;loop for x arr with gen nums
 		PUSH EAX					;save EAX = index of curr val
 		MOV EAX, [ESI + EAX * 4]	;get curr x value into EAX
 		CMP EAX, [EDI + EBX * 4]	;get curr interval left_border value and CMP with EAX
+									;if EAX < curr left border -> jmp to write 
 		POP EAX						;restore EAX
-		JL lb_b_end					;jumb if < curr left border of interval
-		INC EBX						;interval index + 1
-		JMP lp_borders
-	lp_b_end
+		JL lp_b_end					;jump if < curr left border of interval
+		JG check_last_right
 
-	DEC EBC							;turn curr left border into right border (basically, get the interval we seek for)
+		INC EBX						;interval index + 1
+		JMP lp_borders				
+
+		check_last_right:
+			INC EBX
+			CMP EBX, interval_cnt
+			JE trash
+			JMP lp_borders
+
+
+	lp_b_end:
+
+	DEC EBX							;turn curr left border into right border (basically, get the interval we seek for)
 	CMP EBX, 0
 	JL trash						;if index < 0 -> trash
+
 	MOV EDI, result 				;get start of the result arr into EDI
 	PUSH EAX						;save EAX = index of curr val
 	MOV EAX, [EDI + 4 * EBX]		;get x counter val in the result by the index of the interval
@@ -48,6 +61,7 @@ lp_x:								;loop for x arr with gen nums
 
 LOOP lp_x
 
+pop ebp
 POP EAX
 POP ECX
 POP EBX
@@ -56,4 +70,4 @@ POP EDI
 
 RET
 module_2 ENDP
-END
+END 
