@@ -39,9 +39,9 @@ start:
 	or al, 3
 	out 61h, al
 	sub cx, cx
-	sound:
+	sound_wait:
 		nop
-		loop sound ; пока динамик работает
+		loop sound_wait
 	mov al, ah
 	out 61h, al ; выключение динамика
             
