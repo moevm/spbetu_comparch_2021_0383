@@ -54,7 +54,7 @@ int main() {
 
 	std::random_device rng;
 	std::mt19937 gen(rng());
-	std::normal_distribution<> d{xMin, xMax};
+	std::normal_distribution<> d(xmin, xmax);
 
 
 	for (int i = 0; i < arr_size; i++) {
@@ -75,7 +75,7 @@ int main() {
 
 	module_1(x, arr_size, m1, xmin);
 	//first & second modules
-	module_2(x, arr_size, left_border, interval_cnt, result)
+	module_2(x, arr_size, left_border, interval_cnt, result);
 
 	///////////////////////
 	std::cout << "Interval num \tLeft border \tNums in the interval" << std::endl;
@@ -91,3 +91,4 @@ int main() {
 	delete [] x;
 
 	return 0;
+}
