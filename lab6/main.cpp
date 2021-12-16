@@ -2,6 +2,9 @@
 #include <fstream>
 #include <random>
 
+extern "C" void module_1 (int* x, int arr_size, int* result, int xmin);
+extern "C" void module_2 (int* x, int arr_size, int* left_border, int interval_cnt, int* result);
+
 int main() {
 	int arr_size = 0;
 	int xmin = 0, xmax = 0;
@@ -67,19 +70,20 @@ int main() {
 
 	///////////////////////
 
+	int *m1 = new int [xmax - xmin + 1];
 	int *result = new int [interval_cnt];
 
-
+	module_1(x, arr_size, m1, xmin);
 	//first & second modules
-
+	module_2(x, arr_size, left_border, interval_cnt, result)
 
 	///////////////////////
-	std::cout << "Interval num \tLeft border \tRand nums in the interval" << std::endl;
-	output << "Interval num \tLeft border \tRand nums in the interval" << std::endl;
+	std::cout << "Interval num \tLeft border \tNums in the interval" << std::endl;
+	output << "Interval num \tLeft border \tNums in the interval" << std::endl;
 
 	for (int i = 0; i < interval_cnt; i++) {
-		std::cout << "\t" << i + 1 << "\t\t\t" << left_border[i] << "\t\t\t\t" << result_array[i] << '\n';
-		output << "\t" << i + 1 << "\t\t\t" << left_border[i] << "\t\t\t\t" << result_array[i] << '\n';
+		std::cout << "\t" << i + 1 << "\t\t\t" << left_border[i] << "\t\t\t\t" << result[i] << '\n';
+		output << "\t" << i + 1 << "\t\t\t" << left_border[i] << "\t\t\t\t" << result[i] << '\n';
 	}
 
 	delete [] result;
