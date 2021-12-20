@@ -6,7 +6,7 @@
 
 using namespace std;
 
-extern "C" void func(int* nums, int numsCount, int* leftBorders, int* result);
+extern "C" void func(int* nums, int numsCount, int* leftBorders, int* result, int intervalCount);
 
 void output(string A, string B, string C, ofstream& file) {
     cout << setw(6) << right << A << setw(15) << right << B << setw(17) << right << C << endl;
@@ -29,12 +29,13 @@ int main() {
     int intervalCount;
     cout << "Введите количество интервалов: ";
     cin >> intervalCount;
+    intervalCount += 1;
     if (randNumCount <= 0) { cout << "Некорректное количество интервалов"; return -1; };
 
     cout << "Введите левые границы: ";
     int* leftBorders = new int[intervalCount];
     int* result = new int[intervalCount];
-    for (int i = 0; i < intervalCount; i++) {
+    for (int i = 0; i < intervalCount - 1; i++) {
         cin >> leftBorders[i];
 
         int index = i;
@@ -42,7 +43,9 @@ int main() {
             swap(leftBorders[index--], leftBorders[index]);
         }
         result[i] = 0;
+        
     }
+    leftBorders[intervalCount-1] = max;
     cout << endl;
 
     random_device rd{};
@@ -57,19 +60,21 @@ int main() {
         nums[i] = round(dist(gen));
     }
 
-    func(nums, randNumCount, leftBorders, result);
+    func(nums, randNumCount, leftBorders, result, intervalCount-2);
+
+    double* result2 = new double[intervalCount-1];
 
     ofstream file("output.txt");
     cout << "Результат:\n";
-    output("Номер", "Интервал", "Количество значений", file);
-    for (int i = 0; i < intervalCount - 1; i++) {
-        output(
-            to_string(i + 1),
-            '[' + to_string(leftBorders[i]) + "; " + to_string(leftBorders[i + 1]) + ")",
-            to_string(result[i + 1]),
-            file
-        );
-    }
+    output("Номер", "Интервал", "Кол-во значений", file);
+        for (int i = 0; i < intervalCount - 1; i++) {
+            output(
+                to_string(i + 1),
+                '[' + to_string(leftBorders[i]) + "; " + to_string(leftBorders[i + 1]) + ")",
+                to_string(result[i]),
+                file
+            );
+        }
 
     file.close();
     system("pause");
