@@ -1,7 +1,7 @@
 .586
 .MODEL FLAT, C 
 .CODE
-FUNC PROC C array:dword, array_size:dword, left_boarders:dword, intervals_size:dword, result:dword
+FUNC PROC C array:dword, array_size:dword, left_borders:dword, intervals_size:dword, result:dword
 push ecx
 push esi
 push edi
@@ -12,7 +12,7 @@ mov ecx, array_size
 mov esi, array
 mov edi, left_borders
 mov eax, 0;   
-label:                    
+l1:                    
 	mov ebx, 0    
 	borders:      
  		cmp ebx, intervals_size ;     
@@ -38,7 +38,7 @@ label:
 	mov edi, left_borders
 	skip:
 	inc eax       
-loop label
+loop l1
 
 pop ebx 
 pop eax
