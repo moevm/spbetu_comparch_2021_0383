@@ -10,21 +10,21 @@ push ebx;
 
 mov ecx, array_size
 mov esi, array
-mov edi, left_boarders
+mov edi, left_borders
 mov eax, 0;   
-l1:                    
+label:                    
 	mov ebx, 0    
-	boarders:      
+	borders:      
  		cmp ebx, intervals_size ;     
-		jge boarders_exit
+		jge borders_exit
 		push eax
 		mov eax, [esi+4*eax]
 		cmp eax, [edi+4*ebx]
 		pop eax
-		jl boarders_exit
+		jl borders_exit
 		inc ebx
-		jmp boarders
-	boarders_exit:
+		jmp borders
+	borders_exit:
 	dec ebx         
 
 	cmp ebx, -1        
@@ -35,10 +35,10 @@ l1:
 	inc eax
 	mov [edi+4*ebx], eax
 	pop eax
-	mov edi, left_boarders
+	mov edi, left_borders
 	skip:
 	inc eax       
-loop l1
+loop label
 
 pop ebx 
 pop eax

@@ -2,7 +2,7 @@
 #include <fstream>
 #include <random>
 
-extern "C" void FUNC(int *array, int array_size, int *left_boarders, int intervals_size, int *result_array);
+extern "C" void FUNC(int *array, int array_size, int *left_borders, int intervals_size, int *result_array);
 
 int main()
 {
@@ -55,13 +55,13 @@ int main()
         return 0;
     }
 
-    int *left_boarders = new int[intervals_size];
+    int *left_borders = new int[intervals_size];
 
     std::cout << "Введите левые границы: ";
 
     for (int i = 0; i < intervals_size; i++)
 
-        std::cin >> left_boarders[i];
+        std::cin >> left_borders[i];
 
     for (int i = 0; i < intervals_size - 1; i++)
     {
@@ -69,15 +69,15 @@ int main()
         for (int j = i + 1; j < intervals_size; j++)
         {
 
-            if (left_boarders[j] < left_boarders[i])
+            if (left_borders[j] < left_borders[i])
             {
 
-                std::swap(left_boarders[j], left_boarders[i]);
+                std::swap(left_borders[j], left_borders[i]);
             }
         }
     }
 
-    if (intervals_size > 0 and left_boarders[0] < xMin)
+    if (intervals_size > 0 and left_borders[0] < xMin)
     {
 
         std::cout << "Некоторые левые границы интервалов меньше минимального возомжного значения";
@@ -89,7 +89,7 @@ int main()
 
     std::mt19937 gen(rd());
 
-    std::normal_distribution<> dis((xMin + xMax) / 2, std::abs(xMax - xMin) / 4); // https://www.mvorganizing.org/how-do-you-find-standard-deviation-with-max-and-min/
+    std::normal_distribution<> dis((xMin + xMax) / 2, std::abs(xMax - xMin) / 4);
 
     int *array = new int[array_size];
 
@@ -118,7 +118,7 @@ int main()
 
         result_array[i] = 0;
 
-    FUNC(array, array_size, left_boarders, intervals_size, result_array);
+    FUNC(array, array_size, left_borders, intervals_size, result_array);
 
     std::cout << "Номер интервала \tЛевая граница интервала \tКоличество чисел в интервале" << '\n';
 
@@ -127,9 +127,9 @@ int main()
     for (int i = 0; i < intervals_size; i++)
     {
 
-        std::cout << "\t" << i + 1 << "\t\t\t" << left_boarders[i] << "\t\t\t" << result_array[i] << '\n';
+        std::cout << "\t" << i + 1 << "\t\t\t" << left_borders[i] << "\t\t\t" << result_array[i] << '\n';
 
-        file << "\t" << i + 1 << "\t\t\t" << left_boarders[i] << "\t\t\t" << result_array[i] << '\n';
+        file << "\t" << i + 1 << "\t\t\t" << left_borders[i] << "\t\t\t" << result_array[i] << '\n';
     }
 
     file.close();
