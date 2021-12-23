@@ -39,7 +39,7 @@ int main()
 
     std::cin >> intervals_size;
 
-    if (intervals_size <= 0 or intervals_size > 24)
+    if (intervals_size <= 0 || intervals_size > 24)
     {
 
         std::cout << "Неверно введено количество интервалов";
@@ -77,7 +77,7 @@ int main()
         }
     }
 
-    if (intervals_size > 0 and left_borders[0] < xMin)
+    if (intervals_size > 0 && left_borders[0] < xMin)
     {
 
         std::cout << "Некоторые левые границы интервалов меньше минимального возомжного значения";
