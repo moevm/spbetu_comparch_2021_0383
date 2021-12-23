@@ -46,9 +46,9 @@ Main PROC FAR
 	mov i1, bx
 
 	;i2 = -(6 * i + 8)
-	add bx, 7
+	add bx, i
+        sub bx, 1
 	shl bx, 1
-	neg bx
 	mov i2, bx
 
 	jmp L2
