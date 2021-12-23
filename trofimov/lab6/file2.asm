@@ -12,7 +12,7 @@ mov ecx, array_size
 mov esi, array
 mov edi, left_borders
 mov eax, 0;   
-l1:                    
+cycle:                    
 	mov ebx, 0    
 	borders:      
  		cmp ebx, intervals_size ;     
@@ -38,7 +38,7 @@ l1:
 	mov edi, left_borders
 	skip:
 	inc eax       
-loop l1
+loop cycle
 
 pop ebx 
 pop eax
