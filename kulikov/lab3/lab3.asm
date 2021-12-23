@@ -11,11 +11,11 @@ i1 DW 0
 i2 DW 0
 DATA ENDS
 
-; Код программы
+; ГЉГ®Г¤ ГЇГ°Г®ГЈГ°Г Г¬Г¬Г»
 CODE SEGMENT
 
 ASSUME CS:CODE, DS:DATA, SS:AStack
-; Головная процедура
+; ГѓГ®Г«Г®ГўГ­Г Гї ГЇГ°Г®Г¶ГҐГ¤ГіГ°Г 
 Main PROC FAR
 	push DS
 	sub AX, AX
@@ -42,11 +42,11 @@ Main PROC FAR
 	;i1 = -(4 * i + 3)
 	add bx, i
 	add bx, 3
-	neg cx
+	neg bx
 	mov i1, bx
 
 	;i2 = -(6 * i + 8)
-	add bx, 4
+	add bx, 7
 	shl bx, 1
 	neg bx
 	mov i2, bx
