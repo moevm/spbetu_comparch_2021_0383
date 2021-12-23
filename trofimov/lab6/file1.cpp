@@ -2,7 +2,7 @@
 #include <fstream>
 #include <random>
 
-extern "C" void FUNC(int *array, int array_size, int *left_borders, int intervals_size, int *result_array);
+extern "C" void FUNC(int *array, int array_size, int *left_borders, int intervals_size, int *result);
 
 int main()
 {
@@ -112,13 +112,13 @@ int main()
 
     std::cout << '\n';
 
-    int *result_array = new int[intervals_size];
+    int *result = new int[intervals_size];
 
     for (int i = 0; i < intervals_size; i++)
 
-        result_array[i] = 0;
+        result[i] = 0;
 
-    FUNC(array, array_size, left_borders, intervals_size, result_array);
+    FUNC(array, array_size, left_borders, intervals_size, result);
 
     std::cout << "Номер интервала \tЛевая граница интервала \tКоличество чисел в интервале" << '\n';
 
@@ -127,9 +127,9 @@ int main()
     for (int i = 0; i < intervals_size; i++)
     {
 
-        std::cout << "\t" << i + 1 << "\t\t\t" << left_borders[i] << "\t\t\t" << result_array[i] << '\n';
+        std::cout << "\t" << i + 1 << "\t\t\t" << left_borders[i] << "\t\t\t" << result[i] << '\n';
 
-        file << "\t" << i + 1 << "\t\t\t" << left_borders[i] << "\t\t\t" << result_array[i] << '\n';
+        file << "\t" << i + 1 << "\t\t\t" << left_borders[i] << "\t\t\t" << result[i] << '\n';
     }
 
     file.close();
