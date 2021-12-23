@@ -1,4 +1,4 @@
-#include<iostream>
+﻿#include<iostream>
 #include<fstream>
 #include<random>
 
@@ -7,6 +7,7 @@ const int MAX_NINT = 24;
 
 extern "C" void first(int* num, int NumRunDat, int* res, int Xmin);
 extern "C" void second(int* first_res, int NumRunDat, int Xmin, int* borders, int Nint, int* res);
+
 
 
 int main() {
@@ -31,16 +32,24 @@ int main() {
 	int Nint;
 	std::cout << "Введите количество интервалов: ";
 	std::cin >> Nint;
-	if (Nint >= Dx || Nint > MAX_NINT || Nint < 0) {
-		std::cout << "Количество интервалов должно быть меньше Dx = " << Dx << "и больше 0\n";
+	if ((Nint >= Dx) || (Nint > MAX_NINT) || (Nint < 0)) {
+		int min;
+		if (MAX_N < Dx) {
+			min = MAX_N;
+		}
+		else {
+			min = Dx;
+		}
+		std::cout << "Количество интервалов должно быть меньше " << min << " и больше 0\n";
 		return 0;
 	}
 
 	int* left_borders = new int[Nint];
 	int* saved_borders = new int[Nint];
 	std::cout << "Введите левые границы: ";
-	for (int i = 0; i < Nint; i++)
+	for (int i = 0; i < Nint; i++) {
 		std::cin >> left_borders[i];
+	}
 
 	for (int i = 0; i < Nint - 1; i++) {
 		for (int j = i + 1; j < Nint; j++) {
@@ -49,15 +58,18 @@ int main() {
 		}
 	}
 
-	for (int i = 0; i < Nint; i++)
+	for (int i = 0; i < Nint; i++) {
 		saved_borders[i] = left_borders[i];
+		if (left_borders[i] < Xmin) {
+			left_borders[i] = Xmin;
+		}
+	}
 
-	std::random_device rd;
-	std::mt19937 gen(rd());
-	std::normal_distribution<> distribution((Xmin + Xmax) / 2, std::abs(Xmax - Xmin) / 4);
+	std::mt19937 gen(time(nullptr));
+	std::uniform_int_distribution<int> dis(Xmin, Xmax-1);
 	int* num = new int[NumRanDat];
 	for (int i = 0; i < NumRanDat; i++)
-		num[i] = std::round(distribution(gen));
+		num[i] = dis(gen);
 
 	std::cout << "Сгенерированные числа: ";
 	fout << "Сгенерированные числа: ";
@@ -68,7 +80,7 @@ int main() {
 	std::cout << "\n";
 	fout << "\n";
 
-	int len1 = abs(Xmax - Xmin) + 1;
+	int len1 = abs(Xmax - Xmin);
 	int* first_res = new int[len1];
 	for (int i = 0; i < len1; i++)
 		first_res[i] = 0;
@@ -81,14 +93,17 @@ int main() {
 	first(num, NumRanDat, first_res, Xmin);
 
 	std::cout << "Промежуточные результаты: ";
-	for (int i = 0; i < len1; i++)
+	NumRanDat = 0;
+	for (int i = 0; i < len1; i++) {
 		std::cout << first_res[i] << " ";
+		NumRanDat += first_res[i];
+	}
 	std::cout << "\n";
 
 	second(first_res, NumRanDat, Xmin, left_borders, Nint, final_res);
-
-	std::cout << "#\tГраница\tКоличество\n";
-	fout << "#\tГраница\tКоличество\n";
+	
+	std::cout << "№\tГраница\tКоличество\n";
+	fout << "№\tГраница\tКоличество\n";
 	for (int i = 1; i < Nint + 1; i++) {
 		std::cout << i << "\t" << saved_borders[i - 1] << "\t" << final_res[i] << "\n";
 		fout << i << "\t" << saved_borders[i - 1] << "\t" << final_res[i] << "\n";
