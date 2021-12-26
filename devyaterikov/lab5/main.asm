@@ -43,17 +43,6 @@ start_proc:
 	metka:
 	int   21h  ; Вызов функции DOS по прерыванию
 	loop metka ; Вывод сообщения заданное число раз
-
-	mov di,32
-	mov ah,0
-	int 1Ah
-	mov bx,dx; счетчик с момента сброса
-Delay:
-	mov ah,0
-	int 1Ah
-	sub dx,bx
-	cmp di,dx
-	ja Delay;переход,если больше
 	
 	MOV DX, OFFSET MESEND ;Выводсообщенияозавершении обработчика
 	MOV AH,9
