@@ -19,33 +19,44 @@ CODE      SEGMENT
           ASSUME CS:CODE, DS:DATA, SS:AStack
 
 SUBR_INT  PROC FAR
-          PUSH  AX  ; сохранение изменяемых регистров
-          PUSH  BX
-          PUSH  CX
-          PUSH  DX
+          JMP start
+          KEEP_SS DW 0000h
+          KEEP_SP DW 0000h
+          KEEP_STACK DB 40 DUP(?)
+      start:
+          MOV KEEP_SP, SP
+          MOV KEEP_SS, SS
+          MOV SP, SEG KEEP_STACK
+          MOV SS, SP
+          MOV SP, offset start
+          
+          PUSH AX  ; сохранение изменяемых регистров
+          PUSH CX
+          PUSH DX
                     
           ; действия по обработке прерывания
-          mov  cx, NUM_SYM
-          mov  bx, offset MES  ; получаем смещение на начало сообщения
-          add  bx, 2
-          mov  ah, 01h   ; ввод с клавиатуры
+          mov cx, NUM_SYM
+          mov di, offset MES  ; получаем смещение на начало сообщения
+          add di, 2
+          mov ah, 01h   ; ввод с клавиатуры
       lp:         
-          int  21h
-          mov  [bx], al  ; помещаем символ в строку
-          inc  bx
-          loop  lp
+          int 21h
+          mov [di], al  ; помещаем символ в строку
+          inc di
+          loop lp
                 
           ; вывод строк (сообщений)
-          mov  ah, 09h
-          mov  dx, offset MES
-          int  21h
-          mov  dx, offset MES_END
-          int  21h
+          mov ah, 09h
+          mov dx, offset MES
+          int 21h
+          mov dx, offset MES_END
+          int 21h
           
           POP  AX   ; восстановление регистров
-          POP  BX
           POP  CX   
           POP  DX   
+          MOV  SS, KEEP_SS
+          MOV  SP, KEEP_SP
           MOV  AL, 20H  ; для разрешения обрабоки прерываний
           OUT  20H,AL  ; с более низкими уровнями, чем только что обработанное
           IRET
