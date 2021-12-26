@@ -21,8 +21,19 @@ vector_n db 08h
 ; void interruption();
 interfunction proc far
 
+    jmp start
+
+new_stack db 10h
+new_stack_end dw 0
+
+start:
+
     mov keep_ss, ss
     mov keep_sp, sp
+
+    mov ax, seg new_stack
+    mov ss, ax
+    mov sp, new_stack_end
 
     ; сохраняем регистры
     push ax
