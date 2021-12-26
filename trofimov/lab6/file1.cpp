@@ -2,7 +2,7 @@
 #include <fstream>
 #include <random>
 
-extern "C" void FUNC(int *array, int array_size, int *left_borders, int intervals_size, int *result);
+extern "C" void FUNC(int* array, int array_size, int* left_borders, int intervals_size, int* result, int* sum_array);
 
 int main()
 {
@@ -55,7 +55,7 @@ int main()
         return 0;
     }
 
-    int *left_borders = new int[intervals_size];
+    int* left_borders = new int[intervals_size];
 
     std::cout << "Введите левые границы: ";
 
@@ -91,7 +91,7 @@ int main()
 
     std::normal_distribution<> dis((xMin + xMax) / 2, std::abs(xMax - xMin) / 4);
 
-    int *array = new int[array_size];
+    int* array = new int[array_size];
 
     for (int i = 0; i < array_size; i++)
         array[i] = std::round(dis(gen));
@@ -112,24 +112,28 @@ int main()
 
     std::cout << '\n';
 
-    int *result = new int[intervals_size];
+    int* result = new int[intervals_size];
+    int* sum_array = new int[intervals_size];
 
     for (int i = 0; i < intervals_size; i++)
-
+    {
         result[i] = 0;
+        sum_array[i] = 0;
+    }
+        
 
-    FUNC(array, array_size, left_borders, intervals_size, result);
+    FUNC(array, array_size, left_borders, intervals_size, result, sum_array);
 
-    std::cout << "Номер интервала \tЛевая граница интервала \tКоличество чисел в интервале" << '\n';
+    std::cout << "Номер интервала \tЛевая граница интервала \tКоличество чисел в интервале \tАбсолютная сумма чисел в интервале" << '\n';
 
-    file << "Номер интервала \tЛевая граница интервала \tКоличество чисел в интервале" << '\n';
+    file << "Номер интервала \tЛевая граница интервала \tКоличество чисел в интервале \tАбсолютная сумма чисел в интервале" << '\n';
 
     for (int i = 0; i < intervals_size; i++)
     {
 
-        std::cout << "\t" << i + 1 << "\t\t\t" << left_borders[i] << "\t\t\t" << result[i] << '\n';
+        std::cout << "\t" << i + 1 << "\t\t\t" << left_borders[i] << "\t\t\t" << result[i] << "\t\t\t\t\t\t" << sum_array[i]<< '\n';
 
-        file << "\t" << i + 1 << "\t\t\t" << left_borders[i] << "\t\t\t" << result[i] << '\n';
+        file << "\t" << i + 1 << "\t\t\t" << left_borders[i] << "\t\t\t" << result[i] << "\t\t\t\t\t\t" << sum_array[i] << '\n';
     }
 
     file.close();
