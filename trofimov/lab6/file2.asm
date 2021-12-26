@@ -1,7 +1,7 @@
 .586
 .MODEL FLAT, C 
 .CODE
-FUNC PROC C array:dword, array_size:dword, left_borders:dword, intervals_size:dword, result:dword
+FUNC PROC C array:dword, array_size:dword, left_borders:dword, intervals_size:dword, result:dword, sum_array:dword
 push ecx
 push esi
 push edi
@@ -16,15 +16,27 @@ cycle:
 	mov ebx, 0    
 	borders:      
  		cmp ebx, intervals_size ;     
-		jge borders_exit
+		jge borders_extra_exit
 		push eax
 		mov eax, [esi+4*eax]
 		cmp eax, [edi+4*ebx]
-		pop eax
 		jl borders_exit
+		push edi
+		mov edi, sum_array
+		cmp eax,0
+		jge abs
+		neg eax
+		abs:
+			add eax, [edi+4*ebx]
+			mov [edi+4*ebx], eax
+			pop edi
+			pop eax
+
 		inc ebx
 		jmp borders
 	borders_exit:
+	pop eax
+	borders_extra_exit:
 	dec ebx         
 
 	cmp ebx, -1        
