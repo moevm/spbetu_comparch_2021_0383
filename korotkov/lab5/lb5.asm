@@ -17,7 +17,7 @@ my_int PROC FAR
     KEEP_AX DW 0
 	IStack DW 30 DUP(?)
 	
-time PROC
+sound PROC
     MOV CX, 1000
 	MOV AL, 10110110b ; 0B6H
 	OUT 43H, AL ; Код для установления канала 2 таймера-счетчика на работу в качестве делителя частоты см. методу
@@ -31,15 +31,15 @@ time PROC
 	OUT 61H, AL
 	SUB CX, CX
 
-	WHILE_TIME:
+	WHILE_SOUND:
 	NOP
-	LOOP WHILE_TIME ; Цикл, пока динамик работает
+	LOOP WHILE_SOUND ; Цикл, пока динамик работает
 
 	MOV AL, AH
 	OUT 61H, AL
     
     RET
-time ENDP
+sound ENDP
 
 start:
     MOV KEEP_SP, SP
@@ -54,7 +54,7 @@ start:
     PUSH DX 
  ;---------------------------------------------
     INT 21h ; вызов прерывания ms-dos
-	CALL time
+	CALL sound
  ;-----------------------------
 	
     pop DX 
