@@ -9,6 +9,9 @@ DOSSEG
 keep_cs dw 0
 keep_ip dw 0
 
+keep_ss dw 0
+keep_sp dw 0
+
 .CODE
 
 ; номер вектора прерывания
@@ -17,6 +20,9 @@ vector_n db 08h
 ; функция-обработчик прерывания
 ; void interruption();
 interfunction proc far
+
+    mov keep_ss, ss
+    mov keep_sp, sp
 
     ; сохраняем регистры
     push ax
@@ -47,6 +53,9 @@ interfunction proc far
     pop cx
     pop bx
     pop ax
+
+    mov sp, keep_sp
+    mov ss, keep_ss
 
     iret
 
