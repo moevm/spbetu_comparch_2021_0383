@@ -39,15 +39,14 @@ int main() {
     int* LGrInt = new int[NInt];
     std::cout << "Предупреждение:" << std::endl;
     std::cout << "Самая маленькая левая границы интервалов разбиения должна быть строго больше минимальное значения" << std::endl;
-    std::cout << "Самая большая левая границы интервалов разбиения должна быть строго больше максимальное значения" << std::endl;
     std::cout << "Введите левые границы интервалов разбиения: ";
     for (int i = 0; i < NInt; ++i)
         std::cin >> LGrInt[i];
 
-    std::qsort(LGrInt, NInt, sizeof(int), cmp);
+    std::qsort(LGrInt, NInt-1, sizeof(int), cmp);
     //    std::sort(LGrInt, LGrInt+NInt);
 
-    if (LGrInt[0] <= Xmin || LGrInt[NInt-1] <= Xmax) {
+    if (LGrInt[0] <= Xmin) {
         std::cout << "Неверно введены левые границы интервалов разбиения";
         return -1;
     }
